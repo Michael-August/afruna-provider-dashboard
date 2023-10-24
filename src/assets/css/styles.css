@@ -1,0 +1,86 @@
+.nav {
+    /* background: linear-gradient(91deg, #FDD9B3 45.26%, #FEF1E3 99.33%); */
+}
+
+.auth-area {
+    background: url('../images/authbg.png');
+}
+
+.auth-form-card {
+    border-radius: 16px;
+    background: #FFF;
+    box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.25);
+    margin: auto;
+}
+
+.link-item:hover {
+    cursor: pointer;
+    background: #F2F5F7;
+    border-radius: 8px;
+}
+
+.link-item:hover span {
+    color: #0C0E3B;
+}
+
+.active-link {
+    cursor: pointer;
+    background: #F2F5F7;
+    border-radius: 8px;
+}
+
+.active-link span {
+    color: #0C0E3B;
+}
+
+.btn {
+    border-radius: 8px;
+    padding: 10px;
+    background: linear-gradient(180deg, #00AEEF 0%, #0C0E3B 100%);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.03);
+    cursor: pointer;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.status {
+    padding: 3px 10px;
+    border-radius: 2px;
+    font-family: Lato;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.status-mobile {
+    font-size: 16px;
+    padding: 3px 10px;
+    border-radius: 2px;
+    font-family: Lato;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.pending {
+    color: #FF9E3A;
+    background: #FFF9F2;
+}
+
+.in-progress {
+    color: #2D36FF;
+    background: rgba(216, 217, 255, 0.47);
+}
+
+.completed {
+    background-color: rgba(208, 255, 230, 0.47);
+    color: #009A49;
+}
+
+.canceled {
+    background: #FFE8E8;
+    color: #FA3434;
+}
