@@ -1,3 +1,5 @@
+"use client"
+
 import { FC } from "react";
 import '../../assets/css/styles.css'
 import { Card, CardContent } from "@/src/components/ui/card";
@@ -11,12 +13,14 @@ import googleImg from '../../assets/icons/google.png'
 import '../../assets/css/styles.css'
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface Props {
     
 }
  
 const Login: FC<Props> = () => {
+    const router = useRouter()
     return ( 
         <>
             <div className="auth-form-card">
@@ -32,7 +36,7 @@ const Login: FC<Props> = () => {
                                 <Input className="shadow-md px-[23px] py-[16px] rounded-lg outline-0 focus:border-[1px] focus:border-[#FFDBB6]" name="password" id="password" placeholder="*******" />
                             </div>
 
-                            <Button className="btn shadow-md mt-8 py-[10px]">Log in</Button>
+                            <Button onClick={(e) => { e.preventDefault(); router.push('/dashboard')}} className="btn shadow-md mt-8 py-[10px]">Log in</Button>
                         </form>
                         <div className="divider mt-[45px] mb-[40px]">
                             <Image src={divider} alt="divider" />

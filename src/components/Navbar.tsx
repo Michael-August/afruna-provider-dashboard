@@ -66,12 +66,16 @@ const NavBar: FC<NavBarProps> = ({ source }) => {
                                     </div>
                                 </div>
                                 <div className="auth flex items-center gap-2">
-                                    <div className="signin p-3 cursor-pointer">
-                                        <span className="text-base font-bold text-custom-blue">Sign in</span>
-                                    </div>
-                                    <div className="register w-28 btn">
-                                        <span className="text-base font-bold">Register</span>
-                                    </div>
+                                    <Link href={'/auth'}>
+                                        <div className="signin p-3 cursor-pointer">
+                                            <span className="text-base font-bold text-custom-blue">Sign in</span>
+                                        </div>
+                                    </Link>
+                                    <Link href={'/auth/signup'}>
+                                        <div className="register w-28 btn">
+                                            <span className="text-base font-bold">Register</span>
+                                        </div>
+                                    </Link>
                                 </div>
                             </div>
                         }
