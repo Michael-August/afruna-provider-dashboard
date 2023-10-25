@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/src/components/ui/button";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectLabel, SelectItem } from "@/src/components/ui/select";
 import { FC } from "react";
@@ -10,12 +12,16 @@ import star from '../../../assets/icons/star.png'
 import location from '../../../assets/icons/location.png'
 
 import { Card, CardContent } from "@/src/components/ui/card";
+import Modal from "@/src/components/Modal";
+import { useModal } from "@/src/components/context/ModalContext";
+import Link from "next/link";
 
 interface ServicesProps {
     
 }
  
 const Services: FC<ServicesProps> = () => {
+    const { isOpen, openModal, closeModal } = useModal();
     return ( 
         <>
             <div className="services max-w-screen lg:px-[32px] px-5 pb-[132px]">
@@ -37,10 +43,12 @@ const Services: FC<ServicesProps> = () => {
                                     </SelectContent>
                                 </Select>
                             </div>
-                            <Button className="btn rounded-[4px] flex items-center justify-center gap-3 px-[18px]">
-                                <Image src={plus} alt="plus icon" />
-                                <span>Create Service</span>
-                            </Button>
+                            <Link href={'/dashboard/service/new-service'}>
+                                <Button className="btn rounded-[4px] flex items-center justify-center gap-3 px-[18px]">
+                                    <Image src={plus} alt="plus icon" />
+                                    <span>Create Service</span>
+                                </Button>
+                            </Link>
                         </div>
                     </div>
                 </header>
@@ -98,13 +106,21 @@ const Services: FC<ServicesProps> = () => {
                                     <div className="btns-reviews mr-[60px] flex flex-col items-center justify-center">
                                         <div className="btns flex flex-col mb-[23px] lg:mb-0 lg:flex lg:flex-row lg:items-center gap-[10px]">
                                             <Button className="btn w-40 lg:w-auto">Edit</Button>
-                                            <Button className="bg-[#E3F7FF] w-40 lg:w-auto text-sm text-[#00AEEF] px-[18px] py-[10px] rounded-[8px] hover:bg-[#cde1e9]">Publish</Button>
+                                            <Button onClick={openModal} className="bg-[#E3F7FF] w-40 lg:w-auto text-sm text-[#00AEEF] px-[18px] py-[10px] rounded-[8px] hover:bg-[#cde1e9]">Publish</Button>
                                         </div>
                                     </div>
                                 </CardContent>
                             </Card>
                         </div>
                     </div>
+
+                    <Modal cancelBtn="No" confirmBtn="Yes" isOpen={isOpen} onClose={closeModal}>
+                        <div className="message flex flex-col gap-[18px]">
+                            <span className="title text-2xl font-bold text-custom-blue">Unpublished Service</span>
+                            <div className="body text-base text-[#777]">Are you sure you want to publish this service?</div>
+                        </div>
+                    </Modal>
+                        
                 </main>
             </div>
         </>

@@ -45,6 +45,18 @@
     justify-content: center;
 }
 
+.btn-sp {
+    border-radius: 8px;
+    padding: 10px 40px;
+    background: linear-gradient(180deg, #00AEEF 0%, #0C0E3B 100%);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.03);
+    cursor: pointer;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .status {
     padding: 3px 10px;
     border-radius: 2px;
@@ -83,4 +95,20 @@
 .canceled {
     background: #FFE8E8;
     color: #FA3434;
+}
+
+.day {
+    transition: all 1s;
+}
+
+.day:hover {
+    background: linear-gradient(180deg, #00AEEF 0%, #0C0E3B 100%);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.03);
+    color: white;
+    cursor: pointer;
+}
+
+.active-day {
+    background: linear-gradient(180deg, #00AEEF 0%, #0C0E3B 100%);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.03);
 }

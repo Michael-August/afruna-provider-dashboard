@@ -23,11 +23,11 @@ const Login: FC<Props> = () => {
                 <Card className="w-full p-5 rounded-[4px] lg:w-[561px] lg:p-[60px] lg:rounded-2xl">
                     <CardContent>
                         <form action="" className="flex flex-col gap-6">
-                            <div className="form-group flex flex-col gap-2">
+                            <div className="form-control flex flex-col gap-2">
                                 <Label htmlFor="email" className="text-sm font-semibold text-black">Your email</Label>
                                 <Input className="shadow-md px-[23px] py-[16px] w-full rounded-lg outline-0 focus:border-[1px] focus:border-[#FFDBB6]" name="email" id="email" placeholder="examplemail@gmail.com" />
                             </div>
-                            <div className="form-group flex flex-col gap-2">
+                            <div className="form-control flex flex-col gap-2">
                                 <Label htmlFor="password" className="text-sm font-semibold text-black">Password</Label>
                                 <Input className="shadow-md px-[23px] py-[16px] rounded-lg outline-0 focus:border-[1px] focus:border-[#FFDBB6]" name="password" id="password" placeholder="*******" />
                             </div>

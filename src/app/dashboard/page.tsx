@@ -19,6 +19,7 @@ import '../../assets/css/styles.css'
 
 import Image from "next/image";
 import { Card, CardContent } from "@/src/components/ui/card";
+import Link from "next/link";
 
 interface DashboardProps {
     
@@ -31,10 +32,12 @@ const Dashboard: FC<DashboardProps> = () => {
                 <header className="py-6 lg:mx-[-32px] lg:px-[32px] lg:bg-white lg:mb-8 mb-[30px]">
                     <div className="item flex flex-wrap items-center justify-between">
                         <span className="text-2xl font-semibold">Dashboard</span>
-                        <Button className="btn rounded-[4px] flex items-center justify-center gap-3 px-[18px]">
-                            <Image src={plus} alt="plus icon" />
-                            <span>Create Service</span>
-                        </Button>
+                        <Link href={'/dashboard/service/new-service'}>
+                            <Button className="btn rounded-[4px] flex items-center justify-center gap-3 px-[18px]">
+                                <Image src={plus} alt="plus icon" />
+                                <span>Create Service</span>
+                            </Button>
+                        </Link>
                     </div>
                 </header>
                 <main className="flex flex-col">

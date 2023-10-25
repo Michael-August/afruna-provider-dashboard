@@ -22,19 +22,19 @@ const Register: FC<Props> = () => {
                 <Card className="w-[561px] p-[60px] rounded-2xl">
                     <CardContent>
                         <form action="" className="flex flex-col gap-6">
-                            <div className="form-group flex flex-col gap-2">
+                            <div className="form-control flex flex-col gap-2">
                                 <Label htmlFor="email" className="text-sm font-semibold text-black">Your email</Label>
                                 <Input type="email" className="shadow-md px-[23px] py-[16px] w-full rounded-lg outline-0 focus:border-[1px] focus:border-[#FFDBB6]" name="email" id="email" placeholder="examplemail@gmail.com" />
                             </div>
-                            <div className="form-group flex flex-col gap-2">
+                            <div className="form-control flex flex-col gap-2">
                                 <Label htmlFor="phone" className="text-sm font-semibold text-black">Phone number</Label>
                                 <Input type="tel" className="shadow-md px-[23px] py-[16px] w-full rounded-lg outline-0 focus:border-[1px] focus:border-[#FFDBB6]" name="phone" id="phone" placeholder="examplemail@gmail.com" />
                             </div>
-                            <div className="form-group flex flex-col gap-2">
+                            <div className="form-control flex flex-col gap-2">
                                 <Label htmlFor="password" className="text-sm font-semibold text-black">Password</Label>
                                 <Input type="password" className="shadow-md px-[23px] py-[16px] rounded-lg outline-0 focus:border-[1px] focus:border-[#FFDBB6]" name="password" id="password" placeholder="*******" />
                             </div>
-                            <div className="form-group flex flex-col gap-2">
+                            <div className="form-control flex flex-col gap-2">
                                 <Label htmlFor="password" className="text-sm font-semibold text-black">Confirm password</Label>
                                 <Input type="password" className="shadow-md px-[23px] py-[16px] rounded-lg outline-0 focus:border-[1px] focus:border-[#FFDBB6]" name="confirmPassword" id="confirmPassword" placeholder="*******" />
                             </div>
