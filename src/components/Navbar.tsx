@@ -39,7 +39,7 @@ const NavBar: FC<NavBarProps> = ({ source }) => {
 
     return ( 
         <>
-            <div className="nav py-4 lg:px-14" style={styles}>
+            <div className="nav fixed top-0 left-0 right-0 z-10 py-4 lg:px-14" style={styles}>
                 <div className="flex justify-between items-center">
                     {source === 'dashboard' && <div className="hamburger ml-5 block lg:hidden cursor-pointer">
                         <Image onClick={() => setSideBar(true)} src={hamburger} alt="hamburger"/>

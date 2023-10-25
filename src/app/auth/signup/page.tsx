@@ -23,7 +23,7 @@ const Register: FC<Props> = () => {
     return ( 
         <>
             <div className="auth-form-card">
-                <Card className="w-[561px] p-[60px] rounded-2xl">
+                <Card className="w-full p-5 rounded-[4px] lg:w-[561px] lg:p-[60px] lg:rounded-2xl">
                     <CardContent>
                         <form action="" className="flex flex-col gap-6">
                             <div className="form-control flex flex-col gap-2">

@@ -18,17 +18,19 @@ export default function DashboardLayout({
     <html lang="en">
         <body>
             <div className="dashboradlayout">
+              <div className="nabar mb-16">
                 <NavBar source='dashboard' />
-                <div className="dashboard-area flex">
-                    <div className="sidenav hidden lg:block">
-                        <SideNav /> 
-                    </div>
-                    <main className='flex-1'>
-                        <div className='content flex flex-col bg-[#F2F5F7] flex-grow lg:ml-48'>
-                            {children}   
-                        </div>  
-                    </main>
-                </div> 
+              </div>
+              <div className="dashboard-area flex">
+                  <div className="sidenav hidden lg:block">
+                    <SideNav />
+                  </div>
+                  <main className='flex-1'>
+					<div className='content flex flex-col bg-[#F2F5F7] flex-grow lg:ml-48'>
+						{children}   
+					</div>  
+                  </main>
+              </div> 
             </div>
         </body>
     </html>
