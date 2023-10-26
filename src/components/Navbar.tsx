@@ -47,32 +47,32 @@ const NavBar: FC<NavBarProps> = ({ source }) => {
                     <div className="logo pl-10 hidden lg:block">
                         <Image src={logo} alt="logo"/>
                     </div>
-                    <div className="logo block lg:hidden">
+                    <div className={clsx("logo block ml-5 lg:hidden", source === 'dashboard' && 'logo block lg:hidden')}>
                         <Image src={logo} width={126} alt="logo"/>
                     </div>
                     <div className="items">
                         {source === 'home' &&
-                            <div className="home-items flex items-center gap-12">
-                                <div className="misc flex items-center">
-                                    <div className="help flex items-center gap-2 px-2 py-4">
+                            <div className="home-items flex items-center gap-2 lg:gap-12">
+                                <div className="misc gap-1 flex items-center">
+                                    <div className="help flex items-center gap-1 lg:gap-2 px-2 py-4">
                                         <Image src={helpIcon} alt="help" />
-                                        <span className="text-base font-bold text-custom-blue">Help</span>
-                                        <Image src={arrowDown} alt="help" />
+                                        <span className="text-base font-bold hidden lg:block text-custom-blue">Help</span>
+                                        <Image className="hidden lg:block" src={arrowDown} alt="help" />
                                     </div>
-                                    <div className="lang flex items-center gap-2 px-2 py-4">
+                                    <div className="lang flex items-center gap-2 pl-2 pr-0 lg:px-2 py-4">
                                         <Image src={flagIcon} alt="help" />
-                                        <span className="text-base text-custom-blue">EN</span>
-                                        <Image src={arrowDown} alt="help" />
+                                        <span className="text-base hidden lg:block text-custom-blue">EN</span>
+                                        <Image className="hidden lg:block" src={arrowDown} alt="help" />
                                     </div>
                                 </div>
-                                <div className="auth flex items-center gap-2">
+                                <div className="auth flex items-center gap-0 lg:gap-2">
                                     <Link href={'/auth'}>
-                                        <div className="signin p-3 cursor-pointer">
-                                            <span className="text-base font-bold text-custom-blue">Sign in</span>
+                                        <div className="signin lg:p-3 cursor-pointer">
+                                            <span className="text-sm lg:text-base font-bold text-custom-blue">Sign in</span>
                                         </div>
                                     </Link>
                                     <Link href={'/auth/signup'}>
-                                        <div className="register w-28 btn">
+                                        <div className="register w-fit lg:w-28 btn ml-2 mr-5">
                                             <span className="text-base font-bold">Register</span>
                                         </div>
                                     </Link>
