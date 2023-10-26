@@ -70,7 +70,7 @@ export default function Home() {
 				</div>
 			</div>
 			
-			<div className="figures flex items-center flex-col lg:flex-row gap-6 lg:gap-0 justify-evenly bg-black mt-[70px] py-5 bg-[#FEE4CA91] w-full relative">
+			<div className="figures flex items-center flex-col lg:flex-row gap-6 lg:gap-0 justify-evenly mt-[70px] py-5 bg-[#FEE4CA91] w-full relative">
 				<div className="stat flex flex-col gap-[5px] items-center justify-center">
 					<span className="figure text-4xl text-custom-blue font-black">100,000+</span>
 					<span className="for text-[15px] text-custom-blue font-semibold">database of potential service seeking Individuals</span>
