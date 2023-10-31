@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import ModalProvider from '../components/context/ModalContext'
+import { Providers } from '../redux/Provider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,10 +18,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <ModalProvider>
-        <body className={inter.className}>{children}</body>
-      </ModalProvider>
-      
+        <body className={inter.className}>
+          <Providers>
+            <ModalProvider>
+              {children}
+            </ModalProvider>
+          </Providers>
+        </body>
+      {/* <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script> */}
     </html>
   )
 }

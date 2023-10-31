@@ -21,7 +21,7 @@ const Modal: FC<ModalProps> = ({ isOpen, onClose, onCancel, onConfirm, cancelBtn
         <>
             {isOpen &&
                 <div className="modal h-full flex items-start fixed justify-center w-screen bg-black/50 z-50 backdrop-blur-sm top-0 right-0 transition-all duration-500 ease-in">
-                    <div className="modal-content mt-32">
+                    <div className="modal-content mx-5 mt-32">
                         <Card className="lg:w-[534px] px-[30px] py-[25px]">
                             <CardContent className="flex flex-col">
                                 <div className="close flex items-center justify-end">

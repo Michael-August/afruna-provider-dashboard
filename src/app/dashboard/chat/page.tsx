@@ -37,7 +37,7 @@ const Chat: FC<ChatProps> = () => {
                 </header>
                 <main className="lg:flex w-full gap-4">
                     <div className="convo-area">
-                        <Card className="rounded-[20px] pt-[38px] px-6 pb-[86px] lg:327px">
+                        <Card className="rounded-[20px] pt-[38px] px-6 pb-[86px] lg:w-[327px]">
                             <CardContent className="flex flex-col">
                                 <div className="top">
                                     <span className="text-[20px]">Messages</span>
@@ -72,7 +72,7 @@ const Chat: FC<ChatProps> = () => {
                         </Card>
                     </div>
 
-                    <div className="chat-details">
+                    <div className="chat-details hidden lg:block">
                         <Card className="px-6 pb-9 rounded-[20px] lg:w-[767px]">
                             <CardContent className="">
                                 <div className="top px-[31px] py-[30px] flex items-center justify-between">

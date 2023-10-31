@@ -26,6 +26,7 @@ import Link from "next/link";
 import { Card, CardContent } from "../components/ui/card";
 
 export default function Home() {
+
   return (
     <div className="">
 		<div className="nav-area mb-[75px]">
@@ -168,6 +169,13 @@ export default function Home() {
 					<Button className="bg-[#FDD9B3] text-custom-blue font-bold text-base px-10 lg:px-20 py-[30px] hover:bg-[#e2c29f]">Become a Service Provider</Button>
 				</div>
 			</div>
+			
+			{/* <swiper-container slides-per-view="3" speed="500" loop="true" css-mode="true">
+				<swiper-slide>Slide 1</swiper-slide>
+				<swiper-slide>Slide 2</swiper-slide>
+				<swiper-slide>Slide 3</swiper-slide>
+				...
+			</swiper-container> */}
 			
 			<div className="testimonials px-5 lg:px-[130px] py-[90px] pb-[150px]">
 				<div className="top flex flex-col gap-4 mb-[66px]">

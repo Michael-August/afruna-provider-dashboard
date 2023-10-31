@@ -21,15 +21,15 @@ const ModalProvider: FC<ModalProviderProps> = ({ children }) => {
     const closeModal = () => setIsOpen(false);
 
     const contextValue = {
-        isOpen,
-        openModal,
-        closeModal,
+      isOpen,
+      openModal,
+      closeModal,
     };
     return ( 
         <>
-            <ModalContext.Provider value={contextValue}>
-                {children}
-            </ModalContext.Provider>
+          <ModalContext.Provider value={contextValue}>
+            {children}
+          </ModalContext.Provider>
         </>
     );
 }

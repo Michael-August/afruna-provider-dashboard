@@ -10,8 +10,9 @@ import Image from "next/image";
 
 import '../assets/css/styles.css'
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { linkitems } from "../constants/linkitems";
+import AuthService from "../services/auth.service";
 
 interface SideNavProps {
 
@@ -19,8 +20,12 @@ interface SideNavProps {
  
 const SideNav: FC<SideNavProps> = () => {
     const activePath = usePathname()
-    console.log(linkitems[0].icon)
-    console.log(linkitems[0].active_icon)
+    const router = useRouter()
+
+    const logOut = () => {
+        const authService = new AuthService(router)
+        authService.logout()
+    }
     return ( 
         <>
             <div className="sidenav bg-white fixed flex flex-col pt-5 pl-[18px] pr-5 w-48">
@@ -36,7 +41,7 @@ const SideNav: FC<SideNavProps> = () => {
                             </Link> 
                         )
                     }
-                    <div className="link-item px-5 py-3 flex items-center gap-4">
+                    <div onClick={logOut} className="link-item px-5 py-3 flex items-center gap-4">
                         <Image src={logouticon} alt="" />
                         <span className="text-sm font-semibold text-[#A7B7DD]">Log out</span>
                     </div>
