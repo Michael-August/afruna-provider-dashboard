@@ -8,17 +8,131 @@ import ServiceSetupForm from "@/src/components/service-setup-steps/Servicesetup-
 import Stepper from "@/src/components/stepper/Stepper";
 import { Button } from "@/src/components/ui/button";
 import { Card, CardContent } from "@/src/components/ui/card";
-import { FC, useState } from "react"
+import { ICreateService, IServiceCategory, IServiceSubCategory } from "@/src/interfaces/IService";
+import { RootState } from "@/src/redux/store";
+import Service from "@/src/services/services.service";
+import { FC, useEffect, useState } from "react"
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 interface NewServiceProps {
     
 }
  
 const NewService: FC<NewServiceProps> = () => {
+    const serviceId = useSelector((state: RootState) => state.app.service.serviceId)
+    const serviceToUpdate = useSelector((state: RootState) => state.app.service.service)
+
     const steps = ["General Info", "Availability", "Gallary"]
     const [activeStep, setActiveStep] = useState(0)
 
+    const serviceApis = new Service()
+
+    const [categories, setCategories] = useState<IServiceCategory[]>()
+    const [subCategories, setSubCategories] = useState<IServiceSubCategory[]>()
+
+    const [serviceFormData, setServiceFormData] = useState<any>({
+        name: '',
+        category: '',
+        subCategory: '',
+        country: '',
+        state: '',
+        price: 0,
+        desc: '',
+        additionalService: [],
+        availability: {
+            days: [],
+            hours: {
+                from: '',
+                to: '',
+            }
+        },
+        media: []
+    })
+
     const { isOpen, openModal, closeModal } = useModal();
+    const addDays = (day: string) => {
+        const updateFormData = { ...serviceFormData }
+        updateFormData.availability.days = [...updateFormData.availability.days, day]
+        setServiceFormData(updateFormData)
+    }
+    const [mediaSrc, setMediaSrc] = useState<any>([])
+
+    const handleChange = (e: any) => {
+        const { name, value } = e.target;
+        if (name == 'category') {
+            serviceApis.getServiceSubCategories(value)
+                .then(data => setSubCategories(data?.data))
+        }
+
+        if (name == 'media') {
+            const file = e.target.files[0]
+            if (file) {
+                console.log(e.target.files[0])
+                // setServiceFormData({...serviceFormData, media: [e.target.files[0], ...serviceFormData.media]})
+                serviceFormData.media.push(file)
+            }
+            serviceFormData.media.forEach((image: Blob) => {
+                const reader = new FileReader();
+
+                reader.onload = e => setMediaSrc([...mediaSrc, e.target?.result])
+                reader.readAsDataURL(image)
+            })
+        }
+        setServiceFormData({ ...serviceFormData, [name]: value });
+    };
+
+    const handleCountry = (value: string) => {
+        setServiceFormData({...serviceFormData, country: value})
+    }
+
+    const handleState = (value: string) => {
+        setServiceFormData({...serviceFormData, state: value})
+    }
+
+    const handleCategory = (value: string) => {
+        setServiceFormData({...serviceFormData, category: value})
+    }
+
+    const handleSubCat = (value: string) => {
+        setServiceFormData({...serviceFormData, subCategory: value})
+    }
+
+    const processServiceCreation = () => {
+        const formData = new FormData()
+        formData.append('name', serviceFormData.name)
+        formData.append('category', serviceFormData.category)
+        formData.append('subCategory', serviceFormData.subCategory)
+        formData.append('country', serviceFormData.country)
+        formData.append('state', serviceFormData.state)
+        formData.append('price', JSON.stringify(serviceFormData.price))
+        formData.append('desc', serviceFormData.desc)
+        formData.append('availability', JSON.stringify(serviceFormData.availability))
+        // serviceFormData.media?.forEach((image: any) => {
+        //     formData.append('media', image)
+        // })
+        serviceApis.creatService(serviceFormData)
+        openModal()
+    }
+
+    const confirmPublishing = () => {
+        toast.success("Service Published")
+    }
+
+    const cancelPublishing = () => {
+        closeModal()
+    }
+
+    useEffect(() => {
+        const categoriesData = serviceApis.getServiceCategories()
+        categoriesData.then(data => setCategories(data?.data))
+        if (serviceId) {
+            console.log(serviceToUpdate)
+            serviceApis.getService(serviceId)
+            setServiceFormData({...serviceToUpdate})
+        }   
+    }, [])
+
     return ( 
         <>
             <div className="services max-w-screen lg:px-[32px] px-5">
@@ -38,22 +152,24 @@ const NewService: FC<NewServiceProps> = () => {
                                 <Stepper steps={steps} activeStep={activeStep} />
                             </div>
                             <div className="forms">
-                                {activeStep === 0 && <ServiceInfoForm />}
-                                {activeStep === 1 && <ServiceSetupForm />}
-                                {activeStep === 2 && <GallarySetup />}
+                                {activeStep === 0 && <ServiceInfoForm formData={serviceFormData} handleChange={handleChange}
+                                    handleCategoryChange={handleCategory} handleCountryChange={handleCountry} handleStateChange={handleState}
+                                    handleSubCatChange={handleSubCat} cats={categories} subCats={subCategories} />}
+                                {activeStep === 1 && <ServiceSetupForm formData={serviceFormData} handleChange={handleChange} addDays={addDays} />}
+                                {activeStep === 2 && <GallarySetup mediaSrc={mediaSrc} formData={serviceFormData} handleChange={handleChange} />}
                             </div>
                             <div className="btns flex items-center justify-end gap-4 mt-[45px]">
                                 {activeStep !== 0 &&
                                     <Button onClick={() => setActiveStep(activeStep - 1)} className="btn-sp">Previous</Button>}
                                 {activeStep !== steps.length - 1 &&
                                     <Button onClick={() => setActiveStep(activeStep + 1)} className="btn-sp">Next</Button>}
-                                {activeStep === steps.length - 1 && <Button onClick={openModal} className="btn-sp">Done</Button>}
+                                {activeStep === steps.length - 1 && <Button onClick={processServiceCreation} className="btn-sp">Done</Button>}
                             </div>
                         </CardContent>
                     </Card>
                 </main>
 
-                <Modal isOpen={isOpen} onClose={closeModal} cancelBtn="No" confirmBtn="Yes">
+                <Modal isOpen={isOpen} onClose={closeModal} onConfirm={confirmPublishing} onCancel={cancelPublishing} cancelBtn="No" confirmBtn="Yes">
                     <div className="modal-content flex flex-col gap-[17px] items-center justify-center">
                         <span className="text-2xl text-custom-blue font-bold">Service Listing successful</span>
                         <span className="text-[#777] text-base">Are you sure you want to publish this service?</span>

@@ -1,14 +1,19 @@
+"use client"
+
+import { ICreateService } from "@/src/interfaces/IService";
 import { Label } from "@radix-ui/react-label";
 import clsx from "clsx";
-import { FC } from "react";
+import { FC, useState } from "react";
 
 interface ServiceSetupFormProps {
-    
+    addDays: any
+    formData: ICreateService
+    handleChange: any
 }
  
-const ServiceSetupForm: FC<ServiceSetupFormProps> = () => {
-    const days = [
-        { value: 0, title: "All Days", selected: true },
+const ServiceSetupForm: FC<ServiceSetupFormProps> = ({addDays, formData, handleChange}) => {
+    const [days, setDays] = useState<{value: number, title: string, selected: boolean}[]>([
+        { value: 0, title: "All Days", selected: false },
         { value: 1, title: "Monday", selected: false },
         { value: 2, title: "Tuesday", selected: false },
         { value: 3, title: "Wednesday", selected: false },
@@ -16,7 +21,16 @@ const ServiceSetupForm: FC<ServiceSetupFormProps> = () => {
         { value: 5, title: "Friday", selected: false },
         { value: 6, title: "Saturday", selected: false },
         { value: 7, title: "Sunday", selected: false },
-    ]
+    ])
+    const setSelectedDays = (day: { value: number, title: string, selected: boolean }) => {
+        if (day.selected == false) {
+            day.selected = true
+            setDays([...days])
+            addDays(day.title)
+        } else {
+            day.selected = false
+        }
+    }
     return ( 
         <>
             <div className="service-form flex flex-col">
@@ -28,7 +42,7 @@ const ServiceSetupForm: FC<ServiceSetupFormProps> = () => {
                     <form action="" className="w-full flex flex-col gap-[22px]">
                         <div className="days flex flex-wrap gap-2 mb-9">
                             {days.map((day) =>
-                                <span key={day.value} className={
+                                <span onClick={() => setSelectedDays(day)} key={day.value} className={
                                     clsx("day rounded-[6px] px-[18px] py-[10px] bg-[#E9F9FF] text-[#00AEEF] text-sm",
                                     day.selected && 'text-white active-day')}>
                                     {day.title}
@@ -40,12 +54,12 @@ const ServiceSetupForm: FC<ServiceSetupFormProps> = () => {
                             <div className="double-input gap-[22px] lg:flex lg:gap-[35px]">
                                 <div className="form-control w-full mb-[22px] flex flex-col gap-2">
                                     <Label className="text-sm font-semibold">From <span className="text-[red]">*</span></Label>
-                                    <input type="date" name="" id=""
+                                    <input type="time" name="from" value={formData.availability.hours.from} onChange={handleChange} id=""
                                         className="border-[1px] w-full shadow-md text-sm border-[#FFDBB6] rounded-[6px] px-[19px] py-4 focus:outline-none" />
                                 </div>
                                 <div className="form-control w-full mb-[22px] flex flex-col gap-2">
                                     <Label className="text-sm font-semibold">To <span className="text-[red]">*</span></Label>
-                                    <input type="date" name="" id=""
+                                    <input type="time" name="to" value={formData.availability.hours.to} onChange={handleChange} id=""
                                         className="border-[1px] w-full shadow-md text-sm border-[#FFDBB6] rounded-[6px] px-[19px] py-4 focus:outline-none" />
                                 </div>
                             </div>

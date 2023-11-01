@@ -1,11 +1,12 @@
 "use client"
 
-import { IInitialLoginState, IUserBio } from "@/src/interfaces/auth/IAuth";
+import { IInitialLoginState } from "@/src/interfaces/auth/IAuth";
+import { IUserBio } from "@/src/interfaces/IUser";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 const initialState: IInitialLoginState = {
     isAuthenticated: false,
-    userBio: {}
+    userBio: {} as IUserBio
 }
 
 const authSlice = createSlice({

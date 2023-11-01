@@ -9,7 +9,7 @@ interface AuthenticatedWrapperProps {
 }
  
 const AuthenticatedWrapper: FC<AuthenticatedWrapperProps> = ({children}: any) => {
-    const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated)
+    const isAuthenticated = useSelector((state: RootState) => state.app.auth.isAuthenticated)
     const token = sessionStorage.getItem('Token')
     return ( 
         <>

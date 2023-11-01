@@ -2,12 +2,15 @@ import Image from "next/image";
 import { FC } from "react";
 
 import uploadIcon from '../../assets/icons/upload.png'
+import { ICreateService } from "@/src/interfaces/IService";
 
 interface GallarySetupProps {
-    
+    formData: ICreateService
+    handleChange: any
+    mediaSrc: any[]
 }
  
-const GallarySetup: FC<GallarySetupProps> = () => {
+const GallarySetup: FC<GallarySetupProps> = ({ mediaSrc, formData, handleChange }) => {
     return ( 
         <>
             <div className="service-form flex flex-col">
@@ -19,7 +22,7 @@ const GallarySetup: FC<GallarySetupProps> = () => {
                     <form action="" className="w-full flex flex-col gap-[41px]">
                         <div className="form-control">
                             <div className="custom-upload-btn">
-                                <input type="file" hidden name="" id="media" />
+                                <input type="file" hidden name="media" onChange={handleChange} id="media" />
                                 <label htmlFor="media" className="border-dashed border-[1px] rounded-[8px] cursor-pointer border-[#00AEEF] py-[30px] flex flex-col items-center justify-center">
                                     <span className="font-semibold text-lg mb-[11px]">Drag and drop files here</span>
                                     <span className="text-[#979797] text-sm mb-6">The file size limite is 1 MB per file</span>
@@ -31,9 +34,11 @@ const GallarySetup: FC<GallarySetupProps> = () => {
                             </div>
                         </div>
 
-                        <div className="img-preview">
-                            
-                        </div>
+                        {mediaSrc && <div className="img-preview">
+                            {mediaSrc.map((src: any) => (
+                                <Image className="rounded-[4px]" src={src} alt="" width={105} height={72} />
+                            ))}
+                        </div>}
                     </form>
                 </div>
             </div>

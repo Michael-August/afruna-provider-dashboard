@@ -1,9 +1,12 @@
 // import {  } from "next/navigation"
 import axios from 'axios'
-import { ILogin, ISignUp, IUserBio } from "../interfaces/auth/IAuth"
+import { ILogin, ISignUp } from "../interfaces/auth/IAuth"
+import { IUserBio } from '../interfaces/IUser';
 import { toast } from "react-toastify";
+import Cookies from 'js-cookie';
 import { login, logout, updateUserBio } from '../redux/features/auth/auth_slice';
 import { TStore, store } from '../redux/store';
+import { TSuccessResponse } from '../types/auth.types';
 
 class AuthService {
     private router?: any
@@ -16,12 +19,11 @@ class AuthService {
 
     async logIn(payload: ILogin) {
         try {
-            const {data} = await axios.post(`/api/signin`, payload)
-            console.log(data)
-            sessionStorage.setItem("Token", data.data.token);
+            const {data} = await axios.post<TSuccessResponse<{token: string, user: IUserBio}>>(`/api/signin`, payload)
+            Cookies.set("Token", data.data.token);
             this.store.dispatch(login());
             this.store.dispatch(updateUserBio(data.data.user));
-            toast.success(data.data.message)
+            toast.success(data.message)
             this.router?.push("/dashboard");
 
         } catch (error: any) {

@@ -1,3 +1,5 @@
+import { IUserBio } from "../IUser";
+
 export interface ILogin {
     email: string;
     password: string
@@ -16,8 +18,4 @@ export interface ISignUp {
 export interface IInitialLoginState {
     isAuthenticated: boolean,
     userBio: IUserBio
-}
-
-export interface IUserBio {
-
 }
