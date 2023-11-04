@@ -28,7 +28,7 @@ interface ServicesProps {
 const Services: FC<ServicesProps> = () => {
     const router = useRouter()
     const { isOpen, openModal, closeModal } = useModal();
-    const services = useSelector((state: RootState) => state.app.service.services)
+    const services = useSelector((state: RootState) => state.service.services)
 
     const sendDataForEditting = (serviceId: string) => {
         console.log('Edit dispatched')
@@ -82,20 +82,21 @@ const Services: FC<ServicesProps> = () => {
                                                 <div className="top flex items-center justify-between gap-[30px]">
                                                     <span className="text-base mr-10 font-bold px-[10px] py-[8px] text-[#2D36FF] bg-[#D8D9FF78] rounded-[2px]">{service.category.name}</span>
                                                     <span className="flex items-center gap-2">
-                                                        <Image src={star} alt="" />
-                                                        {service.rating}
+                                                        {service.ratings === 0 && <span>Rating</span>}
+                                                        {[...Array(service.ratings)].map((v, i) => < Image key={i} src={star} alt="" />)}
+                                                        {service.ratings}
                                                     </span>
                                                 </div>
                                                 <span className="font-bold text-lg text-custom-blue">{service.name}</span>
                                                 <div className="location flex items-center gap-[10px]">
                                                     <Image src={location} alt="" />
-                                                    <span className="text-[#707070] text-base font-semibold">{service.location}</span>
+                                                    <span className="text-[#707070] text-base font-semibold">{service.state} { service.country }</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="btns-reviews mr-[60px] flex flex-col items-center justify-center">
                                             <div className="btns flex flex-col mb-[23px] lg:mb-0 lg:flex lg:flex-row lg:items-center gap-[10px]">
-                                                <Button className="btn w-40 lg:w-auto" onClick={() => sendDataForEditting(service._id)}>Edit</Button>
+                                                <Button className="btn-sp w-40 lg:w-auto" onClick={() => sendDataForEditting(service._id)}>Edit</Button>
                                                 <Button className="bg-[#E3F7FF] w-40 lg:w-auto text-sm text-[#00AEEF] px-[18px] py-[10px] rounded-[8px] hover:bg-[#cde1e9]">Unpublish</Button>
                                             </div>
                                         </div>

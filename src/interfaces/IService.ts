@@ -1,9 +1,21 @@
 export interface IService {
-    _id: string;
-    category: IServiceCategory;
-    name: string;
-    location: string;
-    rating: number;
+    additionalService?: any;
+    availability: IAvailability
+    category: IServiceCategory
+    country: string
+    customId?: string
+    desc: string
+    insuranceCoverage?: []
+    licenseAndCertification?: []
+    name: string
+    photos?: []
+    price: number
+    providerId: string
+    ratedBy: number
+    ratings: number
+    state: string
+    subCategory: IServiceSubCategory
+    _id: string
 }
 
 export interface IServiceCategory {

@@ -21,6 +21,9 @@ const serviceSlice = createSlice({
         setServiceId: (state, action: PayloadAction<string>) => {
             state.serviceId = action.payload
         },
+        removeServiceId: (state) => {
+            state.serviceId = ''
+        },
         createService: (state, action: PayloadAction<IService>) => {
             state.services = [action.payload, ...state.services]
         },
@@ -30,5 +33,5 @@ const serviceSlice = createSlice({
     }
 })
 
-export const { setServices, setSingleService, setServiceId, createService } = serviceSlice.actions;
+export const { setServices, setSingleService, removeServiceId, setServiceId, createService } = serviceSlice.actions;
 export default serviceSlice.reducer;

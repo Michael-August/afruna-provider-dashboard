@@ -34,7 +34,7 @@ const ServiceInfoForm: FC<ServiceInfoFormProps> = ({ formData, handleChange, han
                         <div className="double-input gap-[22px] lg:flex lg:gap-[35px]">
                             <div className="form-control w-full mb-[22px] flex flex-col gap-2">
                                 <Label className="text-sm font-semibold">Service category <span className="text-[red]">*</span></Label>
-                                <Select name="category" onValueChange={(value) => handleCategoryChange(value)}>
+                                <Select name="category" value={formData.category} onValueChange={(value) => handleCategoryChange(value)}>
                                     <SelectTrigger className="shadow-md focus:outline-none text-sm border-[#FFDBB6] rounded-[6px] px-[19px] py-4">
                                         <SelectValue className="text-[#777]" placeholder="Service Category" />
                                     </SelectTrigger>

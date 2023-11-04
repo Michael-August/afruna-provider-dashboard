@@ -31,8 +31,8 @@ const Modal: FC<ModalProps> = ({ isOpen, onClose, onCancel, onConfirm, cancelBtn
                                     {children}
 
                                     {confirmBtn || cancelBtn ? <div className="btns flex items-center justify-end gap-[15px] mt-[53px]">
-                                        <Button className="bg-[#E3F7FF] lg:w-auto text-sm text-[#00AEEF] px-[40px] py-[10px] rounded-[8px] hover:bg-[#cde1e9]">{ cancelBtn }</Button>
-                                        <Button className="btn-sp lg:w-auto">{confirmBtn}</Button>
+                                        <Button onClick={onCancel} className="bg-[#E3F7FF] lg:w-auto text-sm text-[#00AEEF] px-[40px] py-[10px] rounded-[8px] hover:bg-[#cde1e9]">{ cancelBtn }</Button>
+                                        <Button onClick={onConfirm} className="btn-sp lg:w-auto">{confirmBtn}</Button>
                                     </div> : ''}
                                 </div>
                             </CardContent>

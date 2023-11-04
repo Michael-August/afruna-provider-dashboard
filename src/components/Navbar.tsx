@@ -1,6 +1,6 @@
 'use client'
 
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 import helpIcon from '../assets/icons/help.png'
 import arrowDown from '../assets/icons/arrow_down.png'
@@ -24,6 +24,8 @@ import clsx from "clsx";
 import { linkitems } from "../constants/linkitems";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 interface NavBarProps {
     source: string
@@ -35,7 +37,14 @@ let styles = {
  
 const NavBar: FC<NavBarProps> = ({ source }) => {
     const [isSideBarOpen, setSideBar] = useState(false)
+    const [user, setUser] = useState(useSelector((state: RootState) => state.auth.userBio))
     const activePath = usePathname()
+
+    useEffect(() => {
+        if (!user) {
+            setUser(JSON.parse(sessionStorage.getItem('user') || ''))
+        }
+    })
 
     return ( 
         <>

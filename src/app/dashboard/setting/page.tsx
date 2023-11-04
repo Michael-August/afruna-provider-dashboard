@@ -1,6 +1,8 @@
+"use client"
+
 import { Button } from "@/src/components/ui/button";
 import Image from "next/image";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 
 import mainProfilePics from '../../../assets/images/main-profile.png'
 import arrowDown from '../../../assets/icons/arrow_down.png'
@@ -13,6 +15,39 @@ interface SettingsProps {
 }
  
 const Settings: FC<SettingsProps> = () => {
+    const [user, setUser] = useState()
+
+    const [generalInfo, setGeneralInfo] = useState({
+        firstName: '',
+        lastName: '',
+        phoneNumber: '',
+        email: '',
+        country: ''
+    })
+
+    const [accountInfo, setAccountInfo] = useState({
+        account_name: '',
+        account_number: '',
+        bankName: '',
+    })
+
+    const [secutityInfo, setSecutityInfo] = useState({
+        password: '',
+    })
+
+    const handleGeneralInfoChange = (e: any) => {
+        const { name, value } = e.target
+
+        setGeneralInfo({...generalInfo, [name]: value})
+    }
+
+    const updateGeneralInfo = () => {
+
+    }
+
+    useEffect(() => {
+        setGeneralInfo(JSON.parse(sessionStorage.getItem('user') || ''))
+    }, [user])
     return ( 
         <>
             <div className="dashboard max-w-screen lg:px-[32px] px-5 pb-[132px]">
@@ -43,14 +78,14 @@ const Settings: FC<SettingsProps> = () => {
                                         <div className="form-control mb-[22px] lg:mb-0 w-full">
                                             <div className="form-control w-full flex flex-col gap-2">
                                                 <Label className="text-sm font-semibold">First name <span className="text-[red]">*</span></Label>
-                                                <input type="text" name="" id="" placeholder=""
+                                                <input type="text" name="firstName" id="" placeholder="" onChange={handleGeneralInfoChange} value={generalInfo.firstName} 
                                                     className="border-[1px] w-full shadow-md text-sm border-[#FFDBB6] rounded-[6px] p-[10px] focus:outline-none" />
                                             </div>
                                         </div>
                                         <div className="form-control w-full">
                                             <div className="form-control w-full flex flex-col gap-2">
                                                 <Label className="text-sm font-semibold">Last name <span className="text-[red]">*</span></Label>
-                                                <input type="text" name="" id="" placeholder=""
+                                                <input type="text" name="lastName" id="" placeholder="" onChange={handleGeneralInfoChange} value={generalInfo.lastName}
                                                     className="border-[1px] w-full shadow-md text-sm border-[#FFDBB6] rounded-[6px] p-[10px] focus:outline-none" />
                                             </div>
                                         </div>
@@ -59,29 +94,29 @@ const Settings: FC<SettingsProps> = () => {
                                         <div className="form-control mb-[22px] lg:mb-0 w-full">
                                             <div className="form-control w-full flex flex-col gap-2">
                                                 <Label className="text-sm font-semibold">Email <span className="text-[red]">*</span></Label>
-                                                <input type="email" name="" id="" placeholder=""
+                                                <input type="email" name="email" id="" placeholder="" onChange={handleGeneralInfoChange} value={generalInfo.email}
                                                     className="border-[1px] w-full shadow-md text-sm border-[#FFDBB6] rounded-[6px] p-[10px] focus:outline-none" />
                                             </div>
                                         </div>
                                         <div className="form-control w-full">
                                             <div className="form-control w-full flex flex-col gap-2">
                                                 <Label className="text-sm font-semibold">Phone number <span className="text-[red]">*</span></Label>
-                                                <input type="tel" name="" id="" placeholder=""
+                                                <input type="tel" name="phoneNumber" id="" placeholder="" onChange={handleGeneralInfoChange} value={generalInfo.phoneNumber}
                                                     className="border-[1px] w-full shadow-md text-sm border-[#FFDBB6] rounded-[6px] p-[10px] focus:outline-none" />
                                             </div>
                                         </div>
                                     </div>
                                     <div className="double-input lg:flex lg:gap-[35px]">
                                         <div className="form-control w-full mb-[22px] lg:mb-0 flex flex-col gap-2">
-                                            <Label className="text-sm font-semibold">Gender <span className="text-[red]">*</span></Label>
-                                            <Select>
+                                            <Label className="text-sm font-semibold">Country <span className="text-[red]">*</span></Label>
+                                            <Select value={generalInfo.country}>
                                                 <SelectTrigger className="shadow-md focus:outline-none text-sm border-[#FFDBB6] rounded-[6px] px-[19px] py-4">
-                                                    <SelectValue className="text-[#777]" placeholder="Service Category" />
+                                                    <SelectValue className="text-[#777]" placeholder="Country" />
                                                 </SelectTrigger>
                                                 <SelectContent className="focus:outline-none text-sm border-[#FFDBB6] rounded-[6px]">
                                                     <SelectGroup>
-                                                        <SelectItem value="male">Male</SelectItem>
-                                                        <SelectItem value="female">Female</SelectItem>
+                                                        <SelectItem value="Nigeria">Nigeria</SelectItem>
+                                                        {/* <SelectItem value="female">Female</SelectItem> */}
                                                     </SelectGroup>
                                                 </SelectContent>
                                             </Select>

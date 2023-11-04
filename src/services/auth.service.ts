@@ -22,12 +22,16 @@ class AuthService {
             const {data} = await axios.post<TSuccessResponse<{token: string, user: IUserBio}>>(`/api/signin`, payload)
             Cookies.set("Token", data.data.token);
             this.store.dispatch(login());
+            sessionStorage.setItem('user', JSON.stringify(data.data.user))
             this.store.dispatch(updateUserBio(data.data.user));
             toast.success(data.message)
             this.router?.push("/dashboard");
 
         } catch (error: any) {
-            this.store.dispatch(login())
+            console.log(error)
+            if (error.response.status === 500) {
+                toast.error(`${error.response.statusText}, try again later`)
+            }
             toast.error(error.response.data.message)
         }
     }
@@ -45,6 +49,7 @@ class AuthService {
     logout() {
         toast.success("Logged Out.");
         sessionStorage.clear()
+        Cookies.remove('Token')
 		this.store.dispatch(logout());
 		this.router?.push("/auth")
 			.finally(() => this.store.dispatch(updateUserBio({} as IUserBio)));

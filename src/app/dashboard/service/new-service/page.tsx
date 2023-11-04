@@ -9,7 +9,8 @@ import Stepper from "@/src/components/stepper/Stepper";
 import { Button } from "@/src/components/ui/button";
 import { Card, CardContent } from "@/src/components/ui/card";
 import { ICreateService, IServiceCategory, IServiceSubCategory } from "@/src/interfaces/IService";
-import { RootState } from "@/src/redux/store";
+import { removeServiceId } from "@/src/redux/features/app/service_slice";
+import { RootState, store } from "@/src/redux/store";
 import Service from "@/src/services/services.service";
 import { FC, useEffect, useState } from "react"
 import { useSelector } from "react-redux";
@@ -20,8 +21,8 @@ interface NewServiceProps {
 }
  
 const NewService: FC<NewServiceProps> = () => {
-    const serviceId = useSelector((state: RootState) => state.app.service.serviceId)
-    const serviceToUpdate = useSelector((state: RootState) => state.app.service.service)
+    const serviceId = useSelector((state: RootState) => state.service.serviceId)
+    const serviceToUpdate = useSelector((state: RootState) => state.service.service)
 
     const steps = ["General Info", "Availability", "Gallary"]
     const [activeStep, setActiveStep] = useState(0)
@@ -98,6 +99,49 @@ const NewService: FC<NewServiceProps> = () => {
         setServiceFormData({...serviceFormData, subCategory: value})
     }
 
+    const nextForm = () => {
+        if (activeStep == 0) {
+            if (serviceFormData.name == '') {
+                toast.error('Business name is required')
+                return
+            }
+            if (serviceFormData.category == '') {
+                toast.error('Category is required')
+                return
+            }
+            // if (serviceFormData.subCategory == '') {
+            //     toast.error('Subcategory is required')
+            //     return
+            // }
+            if (serviceFormData.country == '') {
+                toast.error('Country is required')
+                return
+            }
+            if (serviceFormData.state == '') {
+                toast.error('State is required')
+                return
+            }
+            if (serviceFormData.price == '') {
+                toast.error('Price is required')
+                return
+            }
+            if (serviceFormData.desc == '') {
+                toast.error('Description is required')
+                return
+            }
+            setActiveStep(activeStep + 1)
+        }
+
+        if (activeStep == 1) {
+            if (serviceFormData.availability.days.length == 0) {
+                toast.error('Select at least one day')
+                return
+            }
+
+            setActiveStep(activeStep + 1)
+        }
+    }
+
     const processServiceCreation = () => {
         const formData = new FormData()
         formData.append('name', serviceFormData.name)
@@ -130,7 +174,11 @@ const NewService: FC<NewServiceProps> = () => {
             console.log(serviceToUpdate)
             serviceApis.getService(serviceId)
             setServiceFormData({...serviceToUpdate})
-        }   
+        }  
+        
+        // return () => {
+        //     store.dispatch(removeServiceId())
+        // }
     }, [])
 
     return ( 
@@ -162,7 +210,7 @@ const NewService: FC<NewServiceProps> = () => {
                                 {activeStep !== 0 &&
                                     <Button onClick={() => setActiveStep(activeStep - 1)} className="btn-sp">Previous</Button>}
                                 {activeStep !== steps.length - 1 &&
-                                    <Button onClick={() => setActiveStep(activeStep + 1)} className="btn-sp">Next</Button>}
+                                    <Button onClick={nextForm} className="btn-sp">Next</Button>}
                                 {activeStep === steps.length - 1 && <Button onClick={processServiceCreation} className="btn-sp">Done</Button>}
                             </div>
                         </CardContent>

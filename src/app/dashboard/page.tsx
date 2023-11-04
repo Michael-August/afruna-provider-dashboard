@@ -176,7 +176,7 @@ const Dashboard: FC<DashboardProps> = () => {
                                                 </div>
                                                 <div className="btns-reviews mr-[60px] flex flex-col items-center justify-center">
                                                     <div className="btns flex items-center gap-[10px]">
-                                                        <Button className="btn flex items-center justify-center gap-[6px]">
+                                                        <Button className="btn-sp flex items-center justify-center gap-[6px]">
                                                             <Image src={chaticon} alt="" />
                                                             Chat
                                                         </Button>
