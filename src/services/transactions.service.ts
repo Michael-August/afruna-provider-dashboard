@@ -16,7 +16,7 @@ export default class Transaction {
 
     async getWalletDetails() {
         try {
-            const { data } = await axios.get<TSuccessResponse<any>>('/api/wallet', headers)
+            const { data } = await axios.get<TSuccessResponse<any>>('/api/wallets', headers)
             store.dispatch(setWallet(data.data))
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>);
@@ -73,6 +73,15 @@ export default class Transaction {
             return data
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>);
+        }
+    }
+
+    async withdraw(payload: any) {
+        try {
+            const { data } = await axios.post<TSuccessResponse<any>>('/api/wallets/withdraw', payload, headers)
+            return data
+        } catch (error) {
+            handleAuthErrors(error as AxiosError<TErrorResponse>)
         }
     }
 }

@@ -10,7 +10,18 @@ export interface ITransaction {
 }
 
 export interface IWallet {
-    
+    accounts: IAccount[]
+    balance: number;
+    userId: string;
+    _id: string;
+}
+
+export interface IAccount {
+    _id: string;
+    accountName: string;
+    accountNumber: number;
+    bankCode: string;
+    bankName: string;
 }
 
 export interface IConfirmankDetails {

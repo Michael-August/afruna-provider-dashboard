@@ -1,5 +1,5 @@
 import { AxiosError, isAxiosError } from "axios";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { toast } from "react-toastify";
 
 import { TErrorResponse } from "../types/auth.types";
@@ -11,8 +11,8 @@ export function handleAuthErrors(error: AxiosError<TErrorResponse>) {
 				error.response.data.message === "jwt expired" ||
 				error.response.data.message === "jwt malformed"
 			) {
-				let router = useRouter();
-				router.replace("/auth");
+				toast.error(error.response.data.message)
+				redirect('/auth')
 			}
 			//successful request with server response.
 			else

@@ -31,10 +31,12 @@ interface TransactionsProps {
 const Transactions: FC<TransactionsProps> = () => {
     const { isOpen, openModal, closeModal } = useModal();
     const [openModalOnConfirm, setOpenModalOnConfirm] = useState(false)
+    const [openModalOnWithdrawal, setOpenModalOnWithdrawal] = useState(false)
     const [bankDetails, setBankDetails] = useState<IConfirmankDetails>({
         bankCode: '',
         accountNumber: ''
     })
+    const [witdrawalDetail, setWithdrawalDetail] = useState({ amount: 0, accountId: '' })
     const [confirmedDetails, setConfirmedDetails] = useState({ account_name: '', account_number: '', bank_id: 0 })
     const transationApis = new Transaction()
 
@@ -43,13 +45,19 @@ const Transactions: FC<TransactionsProps> = () => {
     const userWallet = useSelector((state: RootState) => state.transaction.wallet)
 
     const handleBankChange = (bank: any) => {
-        console.log(bank)
         setBankDetails({ ...bankDetails, bankCode: bank })
     }
 
     const handleChange = (e: any) => {
         const { name, value } = e.target
         setBankDetails({ ...bankDetails, [name]: value })
+    }
+    const handleWithdrawalDetailChange = (e: any) => {
+        const { name, value } = e.target
+        setWithdrawalDetail({ ...witdrawalDetail, [name]: value })
+    }
+    const handleAccountChange = (account: any) => {
+        setWithdrawalDetail({...witdrawalDetail, accountId: account})
     }
     const confirmBankUpdate = () => {
         let bankName = banks.find(bank => bank.code === bankDetails.bankCode)?.name
@@ -97,6 +105,31 @@ const Transactions: FC<TransactionsProps> = () => {
         })
     }
 
+    const cancelWithdrawal = () => {
+        setOpenModalOnWithdrawal(false)
+    }
+
+    const placeWithdrawal = () => {
+        if (witdrawalDetail.amount > userWallet.balance) {
+            toast.error('Amount can not be larger than balance')
+            return
+        }
+
+        if (witdrawalDetail.amount === 0) {
+            toast.error('Enter amount')
+            return
+        }
+
+        let payload = {
+            amount: witdrawalDetail.amount,
+            accountId: userWallet.accounts[0]._id
+        }
+
+        transationApis.withdraw(payload).then(data => {
+            toast.success('Withdrawal placed')
+        })
+    }
+
     useEffect(() => {
         transationApis.getWalletDetails()
         transationApis.getTransactions()
@@ -126,10 +159,10 @@ const Transactions: FC<TransactionsProps> = () => {
                                         </div>
                                         <div className="info flex flex-col gap-2">
                                             <span className="text-custom-blue text-base font-medium">Available Balance</span>
-                                            <span className="text-[32px] font-normal">$20,000</span>
+                                            <span className="text-[32px] font-normal">${ userWallet.balance }</span>
                                         </div>
                                     </div>
-                                    <Button className="text-white px-4 py-2 bg-[#0177B7] text-sm">Withdraw</Button>
+                                    <Button onClick={() => setOpenModalOnWithdrawal(true)} className="text-white px-4 py-2 bg-[#0177B7] text-sm">Withdraw</Button>
                                 </div>
                             </CardContent>
                         </Card>
@@ -165,7 +198,7 @@ const Transactions: FC<TransactionsProps> = () => {
                                 <span className="heading text-[20px] font-extrabold">Transaction history</span>
                                 <hr className="mx-[-23px] mb-[22px] mt-[26px]" />
 
-                                <Table className="">
+                                <Table className="w-full">
                                     <TableHeader>
                                         <TableRow>
                                             <TableHead className="text-[#7C7C7C] text-sm">Transaction ID</TableHead>
@@ -255,6 +288,33 @@ const Transactions: FC<TransactionsProps> = () => {
                         <span>Account Number: {confirmedDetails.account_number}</span>
                         <span>If confirmed, your bank details will be updated</span>
                     </div>
+                </Modal>
+                <Modal cancelBtn="cancel" confirmBtn="withdraw" onClose={cancelWithdrawal} onCancel={cancelWithdrawal} isOpen={openModalOnWithdrawal} onConfirm={placeWithdrawal}>
+                    <form action="" className="flex flex-col gap-5">
+                        <div className="form-control">
+                            <div className="form-control w-full flex flex-col gap-2">
+                                <Label className="text-sm font-semibold">Amount <span className="text-[red]">*</span></Label>
+                                <input type="number" name="amount" placeholder="40" value={witdrawalDetail.amount} onChange={handleWithdrawalDetailChange}
+                                    className="border-[1px] w-full shadow-md text-sm border-[#FFDBB6] rounded-[6px] p-[10px] focus:outline-none" />
+                            </div>
+                        </div>
+
+                        <div className="form-control w-full flex flex-col gap-2">
+                            <Label className="text-sm font-semibold">Account <span className="text-[red]">*</span></Label>
+                            <Select name="category" value={witdrawalDetail.accountId} onValueChange={(value) => handleAccountChange(value)}>
+                                <SelectTrigger className="shadow-md focus:outline-none text-sm border-[#FFDBB6] rounded-[6px] px-[19px] py-4">
+                                    <SelectValue className="text-[#777]" placeholder="Select Account" />
+                                </SelectTrigger>
+                                <SelectContent className="focus:outline-none text-sm border-[#FFDBB6] rounded-[6px]">
+                                    <SelectGroup>
+                                        {userWallet.accounts?.map(account => (
+                                            <SelectItem key={account._id} value={account._id}>{ account.bankName }</SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </form>
                 </Modal>
             </div>
         </>

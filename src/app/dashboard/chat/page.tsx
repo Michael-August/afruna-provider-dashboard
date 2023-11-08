@@ -1,6 +1,6 @@
 "use client"
 
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 
 import Image from "next/image";
 
@@ -16,28 +16,96 @@ import searchIcon from '../../../assets/icons/search.png'
 import profilepic from '../../../assets/images/profile_pic.png'
 import phone from '../../../assets/icons/phone.png'
 import info from '../../../assets/icons/info.png'
+import sendIcon from '../../../assets/icons/send.png'
+import { useSelector } from "react-redux";
+import { RootState } from "@/src/redux/store";
+import ChatService from "@/src/services/chat.service";
+import clsx from "clsx";
+import { IUser, IUserBio } from "@/src/interfaces/IUser";
+import { IConversation } from "@/src/interfaces/IChat";
 
 interface ChatProps {
     
 }
  
 const Chat: FC<ChatProps> = () => {
+    const chatApis = new ChatService()
+    const [isNewChat, setIsNewChat] = useState(false)
+    const [newUserChat, setNewUserChat] = useState<IUser>()
+    const [friendToChat, setFriendToChat] = useState<IConversation>()
     const { isOpen, openModal, closeModal } = useModal();
+    const conversions = useSelector((state: RootState) => state.chat.conversations)
+    const users = useSelector((state: RootState) => state.chat.users)
+    const [user, setUser] = useState<IUserBio>({
+        _id: '',
+        avatar: '',
+        country: '',
+        email: '',
+        firstName: '',
+        followers: 0,
+        following: 0,
+        lastName: '',
+        phoneNumber: '',
+        role: ''
+    })
+    const [messageToSend, setMessageToSend] = useState('')
+
+    const messages = useSelector((state: RootState) => state.chat.messages)
+
+    const startNewChat = (userToChat: IUser) => {
+        setNewUserChat(userToChat)
+        setIsNewChat(true)
+        closeModal()
+    }
+
+    const fetchMessages = (friend: any) => {
+        chatApis.getMessages(friend._id)
+        setFriendToChat(friend)
+    }
+
+    const fetchUsersToChat = () => {
+        chatApis.getUsers()
+        openModal()
+    }
+
+    const handleChange = (e: any) => {
+        setMessageToSend(e.target.value)
+    }
+
+    const sendMessage = (message: any) => {
+        let payload: {message: string, to: any} = {
+            message,
+            to: ''
+        }
+        if (isNewChat) {
+            payload.to = newUserChat
+            chatApis.sendMessage(payload)
+            chatApis.getConversations()
+        } else {
+            payload.to = friendToChat
+            chatApis.sendMessage(payload)
+        }
+    }
+
+    useEffect(() => {
+        chatApis.getConversations()
+        setUser(JSON.parse(sessionStorage.getItem('user') || ''))
+    }, [])
     return ( 
         <>
             <div className="dashboard max-w-screen lg:px-[32px] px-5 pb-[132px]">
                 <header className="py-6 lg:mx-[-32px] lg:px-[32px] lg:bg-white lg:mb-8 mb-[30px]">
                     <div className="item flex flex-wrap items-center justify-between">
                         <span className="text-2xl font-semibold">Chat Room</span>
-                        <Button onClick={openModal} className="btn rounded-[4px] flex items-center justify-center gap-3 px-[18px]">
+                        {/* <Button onClick={openModal} className="btn rounded-[4px] flex items-center justify-center gap-3 px-[18px]">
                             <Image src={plus} alt="plus icon" />
                             <span>Set Withdraw</span>
-                        </Button>
+                        </Button> */}
                     </div>
                 </header>
                 <main className="lg:flex w-full gap-4">
-                    <div className="convo-area">
-                        <Card className="rounded-[20px] pt-[38px] px-6 pb-[86px] lg:w-[327px]">
+                    <div className={clsx( messages.length > 0 || isNewChat ? "hidden lg:block" : "block")}>
+                        <Card className="rounded-[20px] lg:h-[550px] relative pt-[38px] px-6 pb-[86px] lg:w-[327px]">
                             <CardContent className="flex flex-col">
                                 <div className="top">
                                     <span className="text-[20px]">Messages</span>
@@ -47,78 +115,116 @@ const Chat: FC<ChatProps> = () => {
                                     </div>
                                 </div>
                                 <div className="friend-list flex flex-col gap-2">
-                                    <div className="friend cursor-pointer px-[14px] py-4 flex items-center justify-between">
-                                        <div className="pic-info flex items-center gap-4">
-                                            <Image src={profilepic} width={40} height={40} alt="" />
-                                            <div className="info flex flex-col gap-1">
-                                                <span className="text-sm text-custom-blue font-semibold">Bhai jan ADMIN</span>
-                                                <span className="last-chat text-[#A2A2A2] text-xs">#CU6798H</span>
+                                    {conversions.map(convo => (
+                                        <div onClick={() => fetchMessages(convo)} className="friend rounded-[8px] bg-gray-50 cursor-pointer px-[14px] py-4 flex items-center justify-between">
+                                            <div className="pic-info flex items-center gap-4">
+                                                <Image src={profilepic} width={40} height={40} alt="" />
+                                                <div className="info flex flex-col gap-1">
+                                                    <span className="text-sm text-custom-blue font-semibold">{ convo.alias }</span>
+                                                    <span className="last-chat text-[#A2A2A2] text-xs">{ convo.lastMessage }</span>
+                                                </div>
                                             </div>
+                                            {/* <span className="read-status bg-[#E1E2FF] text-[##5D5FEF] w-6 h-6 rounded-[50px] text-center">1</span> */}
                                         </div>
-                                        <span className="read-status bg-[#E1E2FF] text-[##5D5FEF] w-6 h-6 rounded-[50px] text-center">1</span>
-                                    </div>
-                                    <div className="friend cursor-pointer px-[14px] py-4 flex items-center justify-between">
-                                        <div className="pic-info flex gap-4">
-                                            <Image src={profilepic} width={40} height={40} alt="" />
-                                            <div className="info flex flex-col gap-1">
-                                                <span className="text-sm text-custom-blue font-semibold">Bhai jan ADMIN</span>
-                                                <span className="last-chat text-[#A2A2A2] text-xs">#CU6798H</span>
-                                            </div>
-                                        </div>
-                                        <span className="read-status bg-[#E1E2FF] text-[##5D5FEF] w-6 h-6 rounded-[50px] text-center">1</span>
-                                    </div>
+                                    ))}
+                                </div>
+
+                                <div onClick={fetchUsersToChat} className="start-new-chat flex items-center justify-center w-12 h-12 cursor-pointer absolute bottom-10 right-5 rounded-[50px] bg-[#1F74A2]">
+                                    <Image src={plus} alt="" />
                                 </div>
                             </CardContent>
                         </Card>
                     </div>
 
-                    <div className="chat-details hidden lg:block">
-                        <Card className="px-6 pb-9 rounded-[20px] lg:w-[767px]">
+                    <div className={clsx(messages.length > 0 || isNewChat ? "block relative" :"chat-details hidden lg:block relative" )}>
+                        <Card className="px-6 pb-9 rounded-[20px] lg:h-[550px] lg:w-[767px]">
                             <CardContent className="">
-                                <div className="top px-[31px] py-[30px] flex items-center justify-between">
-                                    <div className="pic-info flex items-center gap-4">
-                                        <Image src={profilepic} width={40} height={40} alt="" />
-                                        <div className="info flex flex-col gap-1">
-                                            <span className="text-sm text-custom-blue font-semibold">Bhai jan ADMIN</span>
-                                            <span className="last-chat text-[#A2A2A2] text-xs">#CU6798H</span>
+                                {messages.length > 0 || isNewChat ? 
+                                    <div>
+                                        <div className="top px-[31px] py-[30px] flex items-center justify-between">
+                                            <div className="pic-info flex items-center gap-4">
+                                                <Image src={profilepic} width={40} height={40} alt="" />
+                                                <div className="info flex flex-col gap-1">
+                                                    {isNewChat ?
+                                                        <span className="text-sm text-custom-blue font-semibold">{newUserChat?.firstName} {newUserChat?.lastName}</span>
+                                                        : <span className="text-sm text-custom-blue font-semibold">{friendToChat?.alias}</span>
+                                                    }
+                                                    {isNewChat ?
+                                                        <span className="last-chat text-[#A2A2A2] text-xs">{newUserChat?.role}</span>
+                                                        : <span className="last-chat text-[#A2A2A2] text-xs">{newUserChat?.role}</span>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div className="actions flex items-center gap-[22px]">
+                                                <Image src={phone} alt="" />
+                                                <Image src={info} alt="" />
+                                            </div>
+                                        </div>
+                                        <hr className="mb-5 -mx-6" />
+                                        <div className="chats">
+                                            {messages.map((message) => (
+                                                <div className="sent-received-messages">
+                                                    <div className={clsx(message.from == user._id || message.from._id == user._id ? "sent" : "received")}>
+                                                        <div className="sender-profile">
+                                                            <span className="time">{message.time}</span>
+                                                            {/* <span className="name">You</span> */}
+                                                            {/* <div className="profile-pic">
+                                                                <div className="profile-pic">
+                                                                    <img *ngIf="!user.avatar" src="assets/images/noimg_avatar.png" alt="">
+                                                                    <img *ngIf="user.avatar" [src]="user.avatar" alt="">
+                                                                </div>
+                                                            </div> */}
+                                                        </div>
+                                                        
+                                                        <div className="receiver-profile">
+                                                            {/* <div className="profile-pic">
+                                                                <img *ngIf="!message.to[0].avatar" src="assets/images/noimg_avatar.png" alt="">
+                                                                <img *ngIf="message.to[0].avatar" [src]="message.to[0].avatar" alt="">
+                                                            </div> */}
+                                                            {/* <span className="name">{{message.to[0].fullName}}</span> */}
+                                                            <span className="time">{message.time}</span>
+                                                        </div>
+                                                        <div className="messages">
+                                                            <span style={{whiteSpace: "pre-line"}} className="message">{message.message}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        <div className="input w-[90%] lg:w-[95%] flex items-center justify-between rounded-[8px] absolute bottom-6 border border-[#D5D5E6]">
+                                            <input type="text" placeholder="write your message here" className="outline-none ml-5 w-[95%]" name="message" onChange={handleChange} value={messageToSend} />
+                                            <Image onClick={() => sendMessage(messageToSend)} src={sendIcon} alt="" className="bg-[#00AEEF] cursor-pointer rounded-t-[10px] rounded-br-[10px] rounded-bl-[88px]" />
                                         </div>
                                     </div>
-                                    <div className="actions flex items-center gap-[22px]">
-                                        <Image src={phone} alt="" />
-                                        <Image src={info} alt="" />
+                                    : <div className="py-60 no-message text-3xl text-slate-400 flex items-center justify-center">
+                                        No message Yet! Select a friend to chat with.
                                     </div>
-                                </div>
-                                <hr className="mb-5 -mx-6" />
-                                <div className="chats">
-                                    
-                                </div>
+                                }
                             </CardContent>
                         </Card>
                     </div>
                 </main>
 
-                <Modal cancelBtn="cancel" confirmBtn="submit" isOpen={isOpen} onClose={closeModal}>
-                    <div className="message flex flex-col">
+                <Modal isOpen={isOpen} onClose={closeModal} height={true}>
+                    <div className="flex flex-col">
                         <div className="top flex flex-col gap-2 mb-7">
-                            <span className="title text-2xl font-bold text-custom-blue">Set your payout</span>
-                            <span className="body text-base text-[#777]">this an account where Afruna would send your payout to</span>
+                            <span className="title text-2xl font-bold text-custom-blue">Select user to chat</span>
+                            <span className="body text-base text-[#777]">Admins, providers, vendors, clients, etc</span>
                         </div>
-                        <form action="" className="flex flex-col gap-[22px]">
-                            <div className="form-control">
-                                <div className="form-control w-full flex flex-col gap-2">
-                                    <Label className="text-sm font-semibold">Bank <span className="text-[red]">*</span></Label>
-                                    <input type="text" name="" id="" placeholder="Access bank"
-                                        className="border-[1px] w-full shadow-md text-sm border-[#FFDBB6] rounded-[6px] p-[10px] focus:outline-none" />
+                        <div className="users flex flex-col gap-2">
+                            {users.map(user => (
+                                <div onClick={() => startNewChat(user)} className="friend cursor-pointer px-[14px] py-4 flex items-center justify-between rounded-[8px] bg-gray-50">
+                                    <div className="pic-info flex items-center gap-4">
+                                        <Image src={profilepic} width={40} height={40} alt="" />
+                                        <div className="info flex flex-col gap-1">
+                                            <span className="text-sm text-custom-blue font-semibold">{user.firstName} { user.lastName }</span>
+                                            <span className="last-chat text-[#A2A2A2] text-xs">{ user.role }</span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="form-control">
-                                <div className="form-control w-full flex flex-col gap-2">
-                                    <Label className="text-sm font-semibold">Account number <span className="text-[red]">*</span></Label>
-                                    <input type="text" name="" id="" placeholder="Access bank"
-                                        className="border-[1px] w-full shadow-md text-sm border-[#FFDBB6] rounded-[6px] p-[10px] focus:outline-none" />
-                                </div>
-                            </div>
-                        </form>
+                            ))}
+                        </div>
                     </div>
                 </Modal>
             </div>

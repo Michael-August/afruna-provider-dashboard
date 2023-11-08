@@ -9,6 +9,25 @@ export interface IUserBio {
     phoneNumber: string;
     followers: number;
     following: number;
-    createdAt: string;
-    updatedAt: string;
+}
+
+export interface IUser {
+    addresses: [];
+    blocked: boolean;
+    country: string;
+    email: string;
+    firstName: string;
+    followers: [];
+    following: [];
+    fromOauth: boolean;
+    isFollower: boolean;
+    isFollowing: boolean;
+    isProvider: boolean;
+    isVendor: boolean;
+    lastName: string;
+    password: string;
+    phoneNumber: string;
+    role: string;
+    verificationToken: string;
+    _id: string;
 }
