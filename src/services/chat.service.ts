@@ -5,6 +5,7 @@ import { headers } from "../constants/http_config";
 import { createMessage, setConversations, setMessages, setUsers } from "../redux/features/app/chat_slice";
 import { handleAuthErrors } from "../utils/auth.util";
 import { IConversation } from "../interfaces/IChat";
+import { T_loading_provider } from "../types/loader.types";
 
 export default class ChatService {
     private store: TStore
@@ -13,19 +14,23 @@ export default class ChatService {
         this.store = store
     }
 
-    async getConversations() {
+    async getConversations(loading_opt: T_loading_provider) {
+        const { setIsLoading } = loading_opt
+        setIsLoading && setIsLoading(true)
         try {
             const { data } = await axios.get<TSuccessResponse<IConversation[]>>('/api/conversations', headers)
             store.dispatch(setConversations(data.data))
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>)
+        } finally {
+            setIsLoading && setIsLoading(false)
         }
     }
 
     async sendMessage(message: any) {
         try {
             const { data } = await axios.post<TSuccessResponse<any>>('/api/messages', message, headers)
-            store.dispatch(createMessage(data.data))
+            store.dispatch(createMessage(data.data.message))
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>)
         }

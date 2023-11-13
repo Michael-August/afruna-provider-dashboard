@@ -7,6 +7,7 @@ import Cookies from 'js-cookie';
 import { login, logout, updateUserBio } from '../redux/features/auth/auth_slice';
 import { TStore, store } from '../redux/store';
 import { TSuccessResponse } from '../types/auth.types';
+import { T_loading_provider } from '../types/loader.types';
 
 class AuthService {
     private router?: any
@@ -17,7 +18,9 @@ class AuthService {
         this.store = store
     }
 
-    async logIn(payload: ILogin) {
+    async logIn(payload: ILogin, loading_opt: T_loading_provider) {
+        const { setIsLoading } = loading_opt
+        setIsLoading && setIsLoading(true)
         try {
             const {data} = await axios.post<TSuccessResponse<{token: string, user: IUserBio}>>(`/api/signin`, payload)
             Cookies.set("Token", data.data.token);
@@ -33,16 +36,22 @@ class AuthService {
                 toast.error(`${error.response.statusText}, try again later`)
             }
             toast.error(error.response.data.message)
+        } finally {
+            setIsLoading && setIsLoading(false)
         }
     }
 
-    async signup(payload: ISignUp) {
+    async signup(payload: ISignUp, loading_opt: T_loading_provider) {
+        const { setIsLoading } = loading_opt
+        setIsLoading && setIsLoading(true)
         try {
             const { data } = await axios.post('/api/signup/provider', payload)
             toast.success(`User ${data.data.firstName} ${data.data.message}`)
             this.router?.push("/auth")
         } catch (error: any) {
             toast.error(error.response.data.message)
+        } finally {
+            setIsLoading && setIsLoading(false)
         }
     }
 

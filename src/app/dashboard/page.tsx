@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/src/components/ui/button";
 import { FC } from "react";
 
@@ -20,6 +22,9 @@ import '../../assets/css/styles.css'
 import Image from "next/image";
 import { Card, CardContent } from "@/src/components/ui/card";
 import Link from "next/link";
+import protectedPage from "@/src/lib/utils";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 interface DashboardProps {
     

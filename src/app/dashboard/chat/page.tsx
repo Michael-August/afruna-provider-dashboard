@@ -1,7 +1,7 @@
 "use client"
 
 import { FC, useEffect, useState } from "react";
-
+import * as io from 'socket.io-client'
 import Image from "next/image";
 
 import { Button } from "@/src/components/ui/button";
@@ -18,24 +18,29 @@ import phone from '../../../assets/icons/phone.png'
 import info from '../../../assets/icons/info.png'
 import sendIcon from '../../../assets/icons/send.png'
 import { useSelector } from "react-redux";
-import { RootState } from "@/src/redux/store";
+import { RootState, store } from "@/src/redux/store";
 import ChatService from "@/src/services/chat.service";
 import clsx from "clsx";
 import { IUser, IUserBio } from "@/src/interfaces/IUser";
 import { IConversation } from "@/src/interfaces/IChat";
+import { setMessages } from "@/src/redux/features/app/chat_slice";
+import Loading from "../../../components/loading";
 
 interface ChatProps {
     
 }
  
 const Chat: FC<ChatProps> = () => {
+
     const chatApis = new ChatService()
     const [isNewChat, setIsNewChat] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     const [newUserChat, setNewUserChat] = useState<IUser>()
     const [friendToChat, setFriendToChat] = useState<IConversation>()
     const { isOpen, openModal, closeModal } = useModal();
     const conversions = useSelector((state: RootState) => state.chat.conversations)
     const users = useSelector((state: RootState) => state.chat.users)
+    const loggedInUser = useSelector((state: RootState) => state.auth.userBio)
     const [user, setUser] = useState<IUserBio>({
         _id: '',
         avatar: '',
@@ -80,7 +85,7 @@ const Chat: FC<ChatProps> = () => {
         if (isNewChat) {
             payload.to = newUserChat
             chatApis.sendMessage(payload)
-            chatApis.getConversations()
+            chatApis.getConversations({setIsLoading})
         } else {
             payload.to = friendToChat
             chatApis.sendMessage(payload)
@@ -88,7 +93,18 @@ const Chat: FC<ChatProps> = () => {
     }
 
     useEffect(() => {
-        chatApis.getConversations()
+        if (!user) {
+            setUser(JSON.parse(sessionStorage.getItem('user') || ''))
+        }
+        
+        const socket = io.connect('https://afruna-backend-cmsxg.ondigitalocean.app')
+        socket.emit('register', loggedInUser._id)
+        socket.on('message', (newMessage) => {
+            console.log(newMessage)
+            store.dispatch(setMessages(newMessage))
+        })
+
+        chatApis.getConversations({setIsLoading})
         setUser(JSON.parse(sessionStorage.getItem('user') || ''))
     }, [])
     return ( 
@@ -103,7 +119,7 @@ const Chat: FC<ChatProps> = () => {
                         </Button> */}
                     </div>
                 </header>
-                <main className="lg:flex w-full gap-4">
+                {isLoading === false ? <main className="lg:flex w-full gap-4">
                     <div className={clsx( messages.length > 0 || isNewChat ? "hidden lg:block" : "block")}>
                         <Card className="rounded-[20px] lg:h-[550px] relative pt-[38px] px-6 pb-[86px] lg:w-[327px]">
                             <CardContent className="flex flex-col">
@@ -204,7 +220,7 @@ const Chat: FC<ChatProps> = () => {
                             </CardContent>
                         </Card>
                     </div>
-                </main>
+                </main> : <Loading />}
 
                 <Modal isOpen={isOpen} onClose={closeModal} height={true}>
                     <div className="flex flex-col">

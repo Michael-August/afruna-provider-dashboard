@@ -2,7 +2,7 @@
 
 import { Button } from "@/src/components/ui/button";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectLabel, SelectItem } from "@/src/components/ui/select";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 
 import Image from "next/image";
 
@@ -20,6 +20,7 @@ import { useSelector } from "react-redux";
 import { RootState, store } from "@/src/redux/store";
 import { setServiceId } from "@/src/redux/features/app/service_slice";
 import { useRouter } from "next/navigation";
+import Loading from "@/src/components/loading";
 
 interface ServicesProps {
     
@@ -29,6 +30,7 @@ const Services: FC<ServicesProps> = () => {
     const router = useRouter()
     const { isOpen, openModal, closeModal } = useModal();
     const services = useSelector((state: RootState) => state.service.services)
+    const [isLoading, setIsLoading] = useState(false)
 
     const sendDataForEditting = (serviceId: string) => {
         console.log('Edit dispatched')
@@ -38,11 +40,11 @@ const Services: FC<ServicesProps> = () => {
 
     useEffect(() => {
         const serviceApis = new Service()
-        serviceApis.getServices()
+        serviceApis.getServices({setIsLoading})
     }, [])
     return ( 
         <>
-            <div className="services max-w-screen lg:px-[32px] px-5 pb-[132px]">
+            {isLoading === false ? <div className="services max-w-screen lg:px-[32px] px-5 pb-[132px]">
                 <header className="py-6 lg:mx-[-32px] lg:px-[32px] lg:bg-white lg:mb-8 mb-[30px]">
                     <div className="item flex flex-wrap gap-[25px] items-center justify-between">
                         <span className="text-2xl font-semibold">My Service</span>
@@ -143,7 +145,7 @@ const Services: FC<ServicesProps> = () => {
                     </Modal>
                         
                 </main>
-            </div>
+            </div> : <Loading />}
         </>
     );
 }

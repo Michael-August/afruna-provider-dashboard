@@ -7,6 +7,7 @@ import { handleAuthErrors } from "../utils/auth.util";
 import { IBooking } from "../interfaces/IBooking";
 import { setBookings, setSingleBooking } from "../redux/features/app/booking_slice";
 import { ParsedUrlQuery } from "querystring";
+import { T_loading_provider } from "../types/loader.types";
 
 export default class BookingService {
     private store: TStore
@@ -15,23 +16,31 @@ export default class BookingService {
         this.store = store
     }
 
-    async getBookings() {
+    async getBookings(loading_opt: T_loading_provider) {
+        const { setIsLoading } = loading_opt
+        setIsLoading && setIsLoading(true)
         try {
             const { data } = await axios.get<TSuccessResponse<IBooking[]>>('/api/bookings', headers)
             store.dispatch(setBookings(data.data))
             toast.success('Fetch successful')
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>);
+        } finally {
+            setIsLoading && setIsLoading(false)
         }
     }
 
-    async getBooking(bookingId: any) {
+    async getBooking(bookingId: any, loading_opt: T_loading_provider) {
+        const { setIsLoading } = loading_opt
+        setIsLoading && setIsLoading(true)
         try {
             const { data } = await axios.get(`/api/bookings/${bookingId}`, headers)
             store.dispatch(setSingleBooking(data.data))
             toast.success('Fetch successful')
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>)
+        } finally {
+            setIsLoading && setIsLoading(false)
         }
     }
 }

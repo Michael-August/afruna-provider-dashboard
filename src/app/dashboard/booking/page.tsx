@@ -1,7 +1,7 @@
 "use client"
 
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectLabel, SelectItem } from "@/src/components/ui/select";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 
 import Image from "next/image";
 import { Button } from "@/src/components/ui/button";
@@ -19,6 +19,7 @@ import BookingService from "@/src/services/booking.service";
 import { useSelector } from "react-redux";
 import { RootState } from "@/src/redux/store";
 import { IBooking } from "@/src/interfaces/IBooking";
+import Loading from "@/src/components/loading";
 
 interface BookingsProps {
     
@@ -27,10 +28,11 @@ interface BookingsProps {
 const Bookings: FC<BookingsProps> = () => {
 
     const bookings = useSelector((state: RootState) => state.booking.bookings)
+    const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
         const bookingApis = new BookingService()
-        bookingApis.getBookings()
+        bookingApis.getBookings({setIsLoading})
     }, [])
     return ( 
         <>
@@ -72,7 +74,7 @@ const Bookings: FC<BookingsProps> = () => {
                         </div>
                     </div>
                 </header>
-                <main className="">
+                {isLoading === false ? <main className="">
                     <div className="bookings w-full flex flex-col gap-[29px] mb-[23px]">
                         {
                             bookings.map((booking: IBooking) => (
@@ -176,7 +178,7 @@ const Bookings: FC<BookingsProps> = () => {
                             </Card>
                         </div>
                     </div>
-                </main>
+                </main>: <Loading />}
             </div>
         </>
     );

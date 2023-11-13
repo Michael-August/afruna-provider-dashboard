@@ -6,6 +6,7 @@ import { headers } from "../constants/http_config";
 import { createService, setServices, setSingleService } from "../redux/features/app/service_slice";
 import { toast } from "react-toastify";
 import { handleAuthErrors } from "../utils/auth.util";
+import { T_loading_provider } from "../types/loader.types";
 
 export default class Service {
     private store: TStore
@@ -20,7 +21,7 @@ export default class Service {
             return data
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>)
-        }
+        } 
     }
 
     async getServiceSubCategories(categoryId: string) {
@@ -32,33 +33,45 @@ export default class Service {
         }
     }
 
-    async getServices () {
+    async getServices(loading_opt: T_loading_provider) {
+        const { setIsLoading } = loading_opt
+        setIsLoading && setIsLoading(true)
         try {
             const { data } = await axios.get<TSuccessResponse<IService[]>>('/api/services', headers)
             store.dispatch(setServices(data.data))
             toast.success('Fetch successful')
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>);
+        } finally {
+            setIsLoading && setIsLoading(false)
         }
     }
 
-    async getService(serviceId: string) {
+    async getService(serviceId: string, loading_opt: T_loading_provider) {
+        const { setIsLoading } = loading_opt
+        setIsLoading && setIsLoading(true)
         try {
             const { data } = await axios.get(`/api/services/${serviceId}`, headers)
             store.dispatch(setSingleService(data.data))
             toast.success('Fetch successful')
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>)
+        } finally {
+            setIsLoading && setIsLoading(false)
         }
     }
 
-    async creatService(payload: ICreateService) {
+    async creatService(payload: ICreateService, loading_opt: T_loading_provider) {
+        const { setIsLoading } = loading_opt
+        setIsLoading && setIsLoading(true)
         try {
             const { data } = await axios.post<TSuccessResponse<IService>>('/api/services', payload, headers)
             store.dispatch(createService(data.data))
             toast.success('Service listing successful')
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>);
+        } finally {
+            setIsLoading && setIsLoading(false)
         }
     }
 }

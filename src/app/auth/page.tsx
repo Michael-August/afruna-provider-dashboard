@@ -1,6 +1,6 @@
 "use client"
 
-import { FC } from "react";
+import { FC, useState } from "react";
 import '../../assets/css/styles.css'
 import { Card, CardContent } from "@/src/components/ui/card";
 import { Label } from "@/src/components/ui/label";
@@ -18,6 +18,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ILogin } from "@/src/interfaces/auth/IAuth";
 import AuthService from "@/src/services/auth.service";
+import ButtonLoading from "@/src/components/buttonLoading";
 
 interface Props {
     
@@ -40,12 +41,13 @@ const PasswordSchema = Yup.object().shape({
  
 const Login: FC<Props> = () => {
     const router = useRouter()
+    const [isLoading, setIsLoading] = useState(false)
 
     const formInitialValue = { email: '', password: '' }
     
     const handleFormSubmission = (values: ILogin) => {
         const authService = new AuthService(router)
-        authService.logIn(values)
+        authService.logIn(values, { setIsLoading })
         // router.push('/dashboard')
     }
 
@@ -83,7 +85,8 @@ const Login: FC<Props> = () => {
                                     </ErrorMessage>
                                 </div>
 
-                                <Button type="submit" className="btn shadow-md mt-8 py-[10px]">Log in</Button>
+                                {!isLoading && <Button type="submit" className="btn shadow-md mt-8 py-[10px]">Log in</Button>}
+                                {isLoading && <Button className="btn shadow-md mt-8 py-[10px]"><ButtonLoading /></Button>}
                             </Form>
                         </Formik>
                         <div className="divider mt-[45px] mb-[40px]">

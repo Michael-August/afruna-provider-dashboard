@@ -41,10 +41,12 @@ const NavBar: FC<NavBarProps> = ({ source }) => {
     const activePath = usePathname()
 
     useEffect(() => {
-        if (!user) {
-            setUser(JSON.parse(sessionStorage.getItem('user') || ''))
+        if (source === 'dashboard') {
+            if (Object.keys(user).length === 0) {
+                setUser(JSON.parse(sessionStorage.getItem('user') || ''))
+            }
         }
-    })
+    }, [])
 
     return ( 
         <>
@@ -109,7 +111,7 @@ const NavBar: FC<NavBarProps> = ({ source }) => {
                                 </div>
                                 <div className="profile  hidden lg:flex items-center gap-2">
                                     <Image src={profilePics} alt="help" />
-                                    <span className="text-base font-bold text-custom-blue">Suleiman SYD</span>
+                                    <span className="text-base font-bold text-custom-blue">{user.firstName} { user.lastName }</span>
                                     <Image src={arrowDown} alt="help" />
                                 </div>
                                 <div className="profile block mr-5 lg:hidden items-center gap-2">

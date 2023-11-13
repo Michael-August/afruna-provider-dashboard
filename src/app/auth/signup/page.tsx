@@ -1,6 +1,6 @@
 "use client"
 
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Card, CardContent } from "@/src/components/ui/card";
 import { Label } from "@/src/components/ui/label";
 import { Input } from "@/src/components/ui/input";
@@ -18,6 +18,7 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import { ISignUp } from "@/src/interfaces/auth/IAuth";
 import AuthService from "@/src/services/auth.service";
 import { CustomFlagsSelect } from "@/src/components/CountrySelect";
+import ButtonLoading from "@/src/components/buttonLoading";
 
 interface Props {
     
@@ -63,6 +64,7 @@ const ConfirmPasswordSchema = Yup.object().shape({
 })
  
 const Register: FC<Props> = () => {
+    const [isLoading, setIsLoading] = useState(false)
 
     const formInitialValue: ISignUp = {
         email: '',
@@ -99,7 +101,7 @@ const Register: FC<Props> = () => {
 
     const handleFormSubmission = (values: ISignUp) => {
         const authService = new AuthService(router)
-        authService.signup(values)
+        authService.signup(values, { setIsLoading })
         console.log("Sign up attempted")
     }
     return ( 
@@ -165,7 +167,8 @@ const Register: FC<Props> = () => {
                                     </ErrorMessage>
                                 </div>
 
-                                <Button type="submit" className="btn shadow-md mt-8 py-[10px]">Sign up</Button>
+                                {!isLoading && <Button type="submit" className="btn shadow-md mt-8 py-[10px]">Log in</Button>}
+                                {isLoading && <Button className="btn shadow-md mt-8 py-[10px]"><ButtonLoading /></Button>}
                             </Form>
                         </Formik>
                         <div className="divider mt-[45px] mb-[40px]">
