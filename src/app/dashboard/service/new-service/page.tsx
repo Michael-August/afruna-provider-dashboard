@@ -1,6 +1,7 @@
 "use client"
 
 import Modal from "@/src/components/Modal";
+import ButtonLoading from "@/src/components/buttonLoading";
 import { useModal } from "@/src/components/context/ModalContext";
 import GallarySetup from "@/src/components/service-setup-steps/Gallarysetup";
 import ServiceInfoForm from "@/src/components/service-setup-steps/Serviceinfo-form";
@@ -26,6 +27,7 @@ const NewService: FC<NewServiceProps> = () => {
 
     const steps = ["General Info", "Availability", "Gallary"]
     const [activeStep, setActiveStep] = useState(0)
+    const [isLoading, setIsLoading] = useState(false)
 
     const serviceApis = new Service()
 
@@ -155,7 +157,7 @@ const NewService: FC<NewServiceProps> = () => {
         // serviceFormData.media?.forEach((image: any) => {
         //     formData.append('media', image)
         // })
-        serviceApis.creatService(serviceFormData)
+        serviceApis.creatService(serviceFormData, { setIsLoading })
         openModal()
     }
 
@@ -172,7 +174,7 @@ const NewService: FC<NewServiceProps> = () => {
         categoriesData.then(data => setCategories(data?.data))
         if (serviceId) {
             console.log(serviceToUpdate)
-            serviceApis.getService(serviceId)
+            serviceApis.getService(serviceId, { setIsLoading })
             setServiceFormData({...serviceToUpdate})
         }  
         
@@ -211,7 +213,8 @@ const NewService: FC<NewServiceProps> = () => {
                                     <Button onClick={() => setActiveStep(activeStep - 1)} className="btn-sp">Previous</Button>}
                                 {activeStep !== steps.length - 1 &&
                                     <Button onClick={nextForm} className="btn-sp">Next</Button>}
-                                {activeStep === steps.length - 1 && <Button onClick={processServiceCreation} className="btn-sp">Done</Button>}
+                                {activeStep === steps.length - 1 && !isLoading && <Button onClick={processServiceCreation} className="btn-sp">Done</Button>}
+                                {isLoading && <Button className="btn shadow-md mt-8 py-[10px]"><ButtonLoading /></Button>}
                             </div>
                         </CardContent>
                     </Card>
