@@ -28,6 +28,7 @@ export interface IUser {
     password: string;
     phoneNumber: string;
     role: string;
+    avatar: string;
     verificationToken: string;
     _id: string;
 }
