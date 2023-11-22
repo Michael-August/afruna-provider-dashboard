@@ -27,7 +27,7 @@ export default class Transaction {
         try {
             const { data } = await axios.get<TSuccessResponse<ITransaction[]>>('/api/transactions', headers)
             store.dispatch(setTransactions(data.data))
-            toast.success('Fetch successful')
+            toast.success('Fetch successful', {autoClose: 1000})
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>);
         }
@@ -37,7 +37,7 @@ export default class Transaction {
         try {
             const { data } = await axios.get<TSuccessResponse<ITransaction>>(`/api/transactions/${transactionId}`, headers)
             store.dispatch(setSingleTransaction(data.data))
-            toast.success('Fetch Succesful')
+            toast.success('Fetch Succesful', {autoClose: 1000})
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>);
         }
@@ -61,7 +61,7 @@ export default class Transaction {
         } catch (error: any) {
             console.log(error)
             if (error.response.data.error.error === "Could not resolve account name. Check parameters or try again.") {
-                toast.error("Could not resolve account name. Check parameters or try again.")
+                toast.error("Could not resolve account name. Check parameters or try again.", {autoClose: 1000})
             }
             handleAuthErrors(error as AxiosError<TErrorResponse>);
         }

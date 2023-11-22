@@ -35,7 +35,7 @@ class AuthService {
             if (error.response.status === 500) {
                 toast.error(`${error.response.statusText}, try again later`)
             }
-            toast.error(error.response.data.message)
+            toast.error(error.response.data.message, {autoClose: 1000})
         } finally {
             setIsLoading && setIsLoading(false)
         }
@@ -46,7 +46,7 @@ class AuthService {
         setIsLoading && setIsLoading(true)
         try {
             const { data } = await axios.post('/api/signup/provider', payload)
-            toast.success(`User ${data.data.firstName} ${data.data.message}`)
+            toast.success(`User ${data.data.firstName} ${data.data.message}`, {autoClose: 1000})
             this.router?.push("/auth")
         } catch (error: any) {
             toast.error(error.response.data.message)

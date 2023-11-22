@@ -10,6 +10,7 @@ export interface IService {
     name: string
     photos?: []
     price: number
+    publish: boolean
     providerId: string
     ratedBy: number
     ratings: number

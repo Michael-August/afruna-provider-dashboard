@@ -22,7 +22,7 @@ export default class BookingService {
         try {
             const { data } = await axios.get<TSuccessResponse<IBooking[]>>('/api/bookings', headers)
             store.dispatch(setBookings(data.data))
-            toast.success('Fetch successful')
+            toast.success('Fetch successful', {autoClose: 1000})
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>);
         } finally {
@@ -36,7 +36,7 @@ export default class BookingService {
         try {
             const { data } = await axios.get(`/api/bookings/${bookingId}`, headers)
             store.dispatch(setSingleBooking(data.data))
-            toast.success('Fetch successful')
+            toast.success('Fetch successful', {autoClose: 1000})
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>)
         } finally {

@@ -28,18 +28,38 @@ interface ServicesProps {
  
 const Services: FC<ServicesProps> = () => {
     const router = useRouter()
+    const serviceApis = new Service(router)
     const { isOpen, openModal, closeModal } = useModal();
     const services = useSelector((state: RootState) => state.service.services)
     const [isLoading, setIsLoading] = useState(false)
+    const [servicePublishState, setServicePublishState] = useState('')
+    const [serviceToPublish, setServiceToPublish] = useState('')
 
     const sendDataForEditting = (serviceId: string) => {
         console.log('Edit dispatched')
         store.dispatch(setServiceId(serviceId))
         router.push('/dashboard/service/new-service')
     }
+    
+    const openEditPublishModal = (serviceId: string, publishState: boolean) => {
+        openModal()
+        setServiceToPublish(serviceId)
+        if (publishState === true) {
+            setServicePublishState('Unpublish')
+        }
+    }
+
+    const confirmPublishUpdate = (serviceId: string) => {
+        let payload = {serviceId}
+        serviceApis.updateServicePublish(serviceId, payload)
+        console.log(serviceId)
+    }
+
+    const cancelPublishUpdate = () => {
+        closeModal()
+    }
 
     useEffect(() => {
-        const serviceApis = new Service()
         serviceApis.getServices({setIsLoading})
     }, [])
     return ( 
@@ -84,8 +104,10 @@ const Services: FC<ServicesProps> = () => {
                                                 <div className="top flex items-center justify-between gap-[30px]">
                                                     <span className="text-base mr-10 font-bold px-[10px] py-[8px] text-[#2D36FF] bg-[#D8D9FF78] rounded-[2px]">{service.category.name}</span>
                                                     <span className="flex items-center gap-2">
-                                                        {service.ratings === 0 && <span>Rating</span>}
-                                                        {[...Array(service.ratings)].map((v, i) => < Image key={i} src={star} alt="" />)}
+                                                        {
+                                                            service.ratings === 0 ? <span>Rating</span>
+                                                            : [...Array(Math.floor(service.ratings))].map((v, i) => < Image key={v} src={star} alt="" />)
+                                                        }
                                                         {service.ratings}
                                                     </span>
                                                 </div>
@@ -99,7 +121,7 @@ const Services: FC<ServicesProps> = () => {
                                         <div className="btns-reviews mr-[60px] flex flex-col items-center justify-center">
                                             <div className="btns flex flex-col mb-[23px] lg:mb-0 lg:flex lg:flex-row lg:items-center gap-[10px]">
                                                 <Button className="btn-sp w-40 lg:w-auto" onClick={() => sendDataForEditting(service._id)}>Edit</Button>
-                                                <Button className="bg-[#E3F7FF] w-40 lg:w-auto text-sm text-[#00AEEF] px-[18px] py-[10px] rounded-[8px] hover:bg-[#cde1e9]">Unpublish</Button>
+                                                <Button onClick={() => openEditPublishModal(service._id, service.publish)} className="bg-[#E3F7FF] w-40 lg:w-auto text-sm text-[#00AEEF] px-[18px] py-[10px] rounded-[8px] hover:bg-[#cde1e9]">{service.publish === false ? "Publish" : "Unpublish"}</Button>
                                             </div>
                                         </div>
                                     </CardContent>
@@ -137,10 +159,10 @@ const Services: FC<ServicesProps> = () => {
                         </div> */}
                     </div>
 
-                    <Modal cancelBtn="No" confirmBtn="Yes" isOpen={isOpen} onClose={closeModal}>
+                    <Modal cancelBtn="No" confirmBtn="Yes" isOpen={isOpen} onClose={closeModal} onCancel={cancelPublishUpdate} onConfirm={() => confirmPublishUpdate(serviceToPublish)}>
                         <div className="message flex flex-col gap-[18px]">
-                            <span className="title text-2xl font-bold text-custom-blue">Unpublished Service</span>
-                            <div className="body text-base text-[#777]">Are you sure you want to publish this service?</div>
+                            <span className="title text-2xl font-bold text-custom-blue">{servicePublishState === 'unpublish' ? "Unpublish" : 'Publish'} Service</span>
+                            <div className="body text-base text-[#777]">Are you sure you want to {servicePublishState === 'unpublish' ? "Unpublish" : 'Publish'} this service?</div>
                         </div>
                     </Modal>
                         

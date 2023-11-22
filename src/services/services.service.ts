@@ -10,9 +10,11 @@ import { T_loading_provider } from "../types/loader.types";
 
 export default class Service {
     private store: TStore
+    private router?: any
 
-    constructor() {
+    constructor(router: any) {
         this.store = store
+        this.router = router
     }
 
     async getServiceCategories() {
@@ -39,7 +41,7 @@ export default class Service {
         try {
             const { data } = await axios.get<TSuccessResponse<IService[]>>('/api/services', headers)
             store.dispatch(setServices(data.data))
-            toast.success('Fetch successful')
+            toast.success('Fetch successful', {autoClose: 1000})
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>);
         } finally {
@@ -53,11 +55,21 @@ export default class Service {
         try {
             const { data } = await axios.get(`/api/services/${serviceId}`, headers)
             store.dispatch(setSingleService(data.data))
-            toast.success('Fetch successful')
+            toast.success('Fetch successful', {autoClose: 1000})
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>)
         } finally {
             setIsLoading && setIsLoading(false)
+        }
+    }
+
+    async updateServicePublish(serviceId: string, payload: {serviceId: string}) {
+        try {
+            const { data } = await axios.put<TSuccessResponse<IService>>(`/api/services/${serviceId}/publish`, payload, headers)
+            this.router.push('/dashboard/service')
+            toast.success('Service publish update successful', {autoClose: 1000}) 
+        } catch (error) {
+            
         }
     }
 
@@ -67,7 +79,7 @@ export default class Service {
         try {
             const { data } = await axios.post<TSuccessResponse<IService>>('/api/services', payload, headers)
             store.dispatch(createService(data.data))
-            toast.success('Service listing successful')
+            toast.success('Service listing successful', {autoClose: 1000})
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>);
         } finally {
