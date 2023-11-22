@@ -18,6 +18,7 @@ export default class Transaction {
         try {
             const { data } = await axios.get<TSuccessResponse<any>>('/api/wallets', headers)
             store.dispatch(setWallet(data.data))
+            sessionStorage.setItem('account', JSON.stringify(data.data.accounts[0]))
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>);
         }

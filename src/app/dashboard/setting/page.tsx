@@ -9,6 +9,9 @@ import arrowDown from '../../../assets/icons/arrow_down.png'
 import { Card, CardContent } from "@/src/components/ui/card";
 import { Label } from "@/src/components/ui/label";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectItem } from "@/src/components/ui/select";
+import { useSelector } from "react-redux";
+import { RootState } from "@/src/redux/store";
+import Transaction from "@/src/services/transactions.service";
 
 interface SettingsProps {
     
@@ -16,6 +19,8 @@ interface SettingsProps {
  
 const Settings: FC<SettingsProps> = () => {
     const [user, setUser] = useState()
+    const account = useSelector((state: RootState) => state.transaction.wallet)
+    const [banks, setBanks] = useState<any[]>([])
 
     const [generalInfo, setGeneralInfo] = useState({
         firstName: '',
@@ -25,10 +30,10 @@ const Settings: FC<SettingsProps> = () => {
         country: ''
     })
 
-    const [accountInfo, setAccountInfo] = useState({
-        account_name: '',
-        account_number: '',
-        bankName: '',
+    const [accountInfo, setAccountInfo] = useState<any>({
+        accountName: '',
+        accountNumber: '',
+        bankCode: '',
     })
 
     const [secutityInfo, setSecutityInfo] = useState({
@@ -41,13 +46,27 @@ const Settings: FC<SettingsProps> = () => {
         setGeneralInfo({...generalInfo, [name]: value})
     }
 
+    const handleAccountInfoChange = (e: any) => {
+        const { name, value } = e.target
+
+        setAccountInfo({...accountInfo, [name]: value})
+    }
+
+    const handleBankChange = (value: string) => {
+        setAccountInfo({...accountInfo, bankCode: value})
+    }
+
     const updateGeneralInfo = () => {
 
     }
 
     useEffect(() => {
+        const transactionApis = new Transaction()
+        transactionApis.getWalletDetails()
+        setBanks(JSON.parse(sessionStorage.getItem('banks') || ''))
         setGeneralInfo(JSON.parse(sessionStorage.getItem('user') || ''))
-    }, [user])
+        setAccountInfo(JSON.parse(sessionStorage.getItem('account') || ''))
+    }, [])
     return ( 
         <>
             <div className="dashboard max-w-screen lg:px-[32px] px-5 pb-[132px]">
@@ -149,14 +168,14 @@ const Settings: FC<SettingsProps> = () => {
                                         <div className="form-control mb-[22px] lg:mb-0 w-full">
                                             <div className="form-control w-full flex flex-col gap-2">
                                                 <Label className="text-sm font-semibold">Account holder's name <span className="text-[red]">*</span></Label>
-                                                <input type="text" name="" id="" placeholder=""
+                                                <input type="text" name="accountName" value={accountInfo.accountName} onChange={handleAccountInfoChange} id="" placeholder=""
                                                     className="border-[1px] w-full shadow-md text-sm border-[#FFDBB6] rounded-[6px] p-[10px] focus:outline-none" />
                                             </div>
                                         </div>
                                         <div className="form-control w-full">
                                             <div className="form-control w-full flex flex-col gap-2">
                                                 <Label className="text-sm font-semibold">Account number <span className="text-[red]">*</span></Label>
-                                                <input type="text" name="" id="" placeholder=""
+                                                <input type="text" name="accountNumber" value={accountInfo.accountNumber} onChange={handleAccountInfoChange} id="" placeholder=""
                                                     className="border-[1px] w-full shadow-md text-sm border-[#FFDBB6] rounded-[6px] p-[10px] focus:outline-none" />
                                             </div>
                                         </div>
@@ -164,14 +183,13 @@ const Settings: FC<SettingsProps> = () => {
                                     <div className="double-input lg:flex lg:gap-[35px]">
                                         <div className="form-control w-full mb-[22px] lg:mb-0 flex flex-col gap-2">
                                             <Label className="text-sm font-semibold">Bank <span className="text-[red]">*</span></Label>
-                                            <Select>
+                                            <Select onValueChange={handleBankChange} value={accountInfo.bankCode}>
                                                 <SelectTrigger className="shadow-md focus:outline-none text-sm border-[#FFDBB6] rounded-[6px] px-[19px] py-4">
                                                     <SelectValue className="text-[#777]" placeholder="Bank" />
                                                 </SelectTrigger>
                                                 <SelectContent className="focus:outline-none text-sm border-[#FFDBB6] rounded-[6px]">
                                                     <SelectGroup>
-                                                        <SelectItem value="male">Male</SelectItem>
-                                                        <SelectItem value="female">Female</SelectItem>
+                                                        {banks.map(bank => <SelectItem value={bank.code}>{bank.name}</SelectItem>)}
                                                     </SelectGroup>
                                                 </SelectContent>
                                             </Select>

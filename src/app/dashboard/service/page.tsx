@@ -51,8 +51,7 @@ const Services: FC<ServicesProps> = () => {
 
     const confirmPublishUpdate = (serviceId: string) => {
         let payload = {serviceId}
-        serviceApis.updateServicePublish(serviceId, payload)
-        console.log(serviceId)
+        serviceApis.updateServicePublish(serviceId)
     }
 
     const cancelPublishUpdate = () => {

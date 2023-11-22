@@ -63,9 +63,9 @@ export default class Service {
         }
     }
 
-    async updateServicePublish(serviceId: string, payload: {serviceId: string}) {
+    async updateServicePublish(serviceId: string) {
         try {
-            const { data } = await axios.put<TSuccessResponse<IService>>(`/api/services/${serviceId}/publish`, payload, headers)
+            const { data } = await axios.put<TSuccessResponse<IService>>(`/api/services/${serviceId}/publish`, undefined, headers)
             this.router.push('/dashboard/service')
             toast.success('Service publish update successful', {autoClose: 1000}) 
         } catch (error) {
@@ -79,7 +79,8 @@ export default class Service {
         try {
             const { data } = await axios.post<TSuccessResponse<IService>>('/api/services', payload, headers)
             store.dispatch(createService(data.data))
-            toast.success('Service listing successful', {autoClose: 1000})
+            localStorage.setItem("recentService", JSON.stringify(data.data))
+            toast.success('Service listing successful', { autoClose: 1000 })
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>);
         } finally {

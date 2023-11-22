@@ -13,6 +13,7 @@ import { ICreateService, IServiceCategory, IServiceSubCategory } from "@/src/int
 import { removeServiceId } from "@/src/redux/features/app/service_slice";
 import { RootState, store } from "@/src/redux/store";
 import Service from "@/src/services/services.service";
+import { useRouter } from "next/navigation";
 import { FC, useEffect, useState } from "react"
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -22,6 +23,7 @@ interface NewServiceProps {
 }
  
 const NewService: FC<NewServiceProps> = () => {
+    const router = useRouter()
     const serviceId = useSelector((state: RootState) => state.service.serviceId)
     const serviceToUpdate = useSelector((state: RootState) => state.service.service)
 
@@ -29,7 +31,7 @@ const NewService: FC<NewServiceProps> = () => {
     const [activeStep, setActiveStep] = useState(0)
     const [isLoading, setIsLoading] = useState(false)
 
-    const serviceApis = new Service()
+    const serviceApis = new Service(router)
 
     const [categories, setCategories] = useState<IServiceCategory[]>()
     const [subCategories, setSubCategories] = useState<IServiceSubCategory[]>()
@@ -162,7 +164,8 @@ const NewService: FC<NewServiceProps> = () => {
     }
 
     const confirmPublishing = () => {
-        toast.success("Service Published")
+        let mostRecentService = JSON.parse(localStorage.getItem('recentService') || '')
+        serviceApis.updateServicePublish(mostRecentService._id)
     }
 
     const cancelPublishing = () => {
