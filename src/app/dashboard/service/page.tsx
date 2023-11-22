@@ -50,8 +50,8 @@ const Services: FC<ServicesProps> = () => {
     }
 
     const confirmPublishUpdate = (serviceId: string) => {
-        let payload = {serviceId}
         serviceApis.updateServicePublish(serviceId)
+        closeModal()
     }
 
     const cancelPublishUpdate = () => {
