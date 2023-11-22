@@ -4,7 +4,7 @@ import { TErrorResponse, TSuccessResponse } from "../types/auth.types";
 import { headers } from "../constants/http_config";
 import { createMessage, setConversations, setMessages, setUsers } from "../redux/features/app/chat_slice";
 import { handleAuthErrors } from "../utils/auth.util";
-import { IConversation } from "../interfaces/IChat";
+import { IConversation, IMessage } from "../interfaces/IChat";
 import { T_loading_provider } from "../types/loader.types";
 
 export default class ChatService {
@@ -39,7 +39,9 @@ export default class ChatService {
     async getMessages(conversationId: string) {
         try {
             const { data } = await axios.get<TSuccessResponse<any>>(`/api/messages/${conversationId}`, headers)
-            store.dispatch(setMessages(data.data))
+            const messages: IMessage[] = data.data.slice().reverse();
+            store.dispatch(setMessages(messages))
+            return data.data
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>)
         }
