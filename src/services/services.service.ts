@@ -66,14 +66,14 @@ export default class Service {
     async updateServicePublish(serviceId: string) {
         try {
             const { data } = await axios.put<TSuccessResponse<IService>>(`/api/services/${serviceId}/publish`, undefined, headers)
-            this.getServices({})
-            toast.success('Service publish update successful', {autoClose: 1000}) 
+            toast.success('Service publish update successful', { autoClose: 1000 }) 
+            this.router.push('/dashboard/service')
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>);
         }
     }
 
-    async creatService(payload: ICreateService, loading_opt: T_loading_provider) {
+    async creatService(payload: any, loading_opt: T_loading_provider) {
         const { setIsLoading } = loading_opt
         setIsLoading && setIsLoading(true)
         try {

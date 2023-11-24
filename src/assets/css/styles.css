@@ -220,6 +220,10 @@
     letter-spacing: 0.14px;
 }
 
+.profileImg {
+    clip-path: circle();
+}
+
 /* Loaders */
 .lds-facebook {
     display: inline-block;

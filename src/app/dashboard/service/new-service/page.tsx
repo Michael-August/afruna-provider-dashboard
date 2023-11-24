@@ -52,7 +52,7 @@ const NewService: FC<NewServiceProps> = () => {
                 to: '',
             }
         },
-        media: []
+        media: {}
     })
 
     const { isOpen, openModal, closeModal } = useModal();
@@ -61,28 +61,35 @@ const NewService: FC<NewServiceProps> = () => {
         updateFormData.availability.days = [...updateFormData.availability.days, day]
         setServiceFormData(updateFormData)
     }
-    const [mediaSrc, setMediaSrc] = useState<any>([])
+    const [mediaSrc, setMediaSrc] = useState<any>()
 
     const handleChange = (e: any) => {
         const { name, value } = e.target;
-        if (name == 'category') {
-            serviceApis.getServiceSubCategories(value)
-                .then(data => setSubCategories(data?.data))
+
+        if (name === 'from') {
+            const updateFormData = { ...serviceFormData }
+            updateFormData.availability.hours.from = value
+            setServiceFormData(updateFormData)
+        }
+
+        if (name === 'to') {
+            const updateFormData = { ...serviceFormData }
+            updateFormData.availability.hours.to = value
+            setServiceFormData(updateFormData)
         }
 
         if (name == 'media') {
             const file = e.target.files[0]
             if (file) {
-                console.log(e.target.files[0])
-                // setServiceFormData({...serviceFormData, media: [e.target.files[0], ...serviceFormData.media]})
-                serviceFormData.media.push(file)
-            }
-            serviceFormData.media.forEach((image: Blob) => {
                 const reader = new FileReader();
 
-                reader.onload = e => setMediaSrc([...mediaSrc, e.target?.result])
-                reader.readAsDataURL(image)
-            })
+                reader.onload = function (e) {
+                    setMediaSrc(e.target?.result);
+                };
+
+                reader.readAsDataURL(file);
+                setServiceFormData({ ...serviceFormData, media: file })
+            }
         }
         setServiceFormData({ ...serviceFormData, [name]: value });
     };
@@ -96,7 +103,9 @@ const NewService: FC<NewServiceProps> = () => {
     }
 
     const handleCategory = (value: string) => {
-        setServiceFormData({...serviceFormData, category: value})
+        setServiceFormData({ ...serviceFormData, category: value })
+        serviceApis.getServiceSubCategories(value)
+            .then(data => setSubCategories(data?.data))
     }
 
     const handleSubCat = (value: string) => {
@@ -125,7 +134,7 @@ const NewService: FC<NewServiceProps> = () => {
                 toast.error('State is required')
                 return
             }
-            if (serviceFormData.price == '') {
+            if (serviceFormData.price == 0) {
                 toast.error('Price is required')
                 return
             }
@@ -147,25 +156,26 @@ const NewService: FC<NewServiceProps> = () => {
     }
 
     const processServiceCreation = () => {
+        if (serviceFormData.subCategory === "") serviceFormData.subCategory = undefined
+        
         const formData = new FormData()
         formData.append('name', serviceFormData.name)
         formData.append('category', serviceFormData.category)
         formData.append('subCategory', serviceFormData.subCategory)
         formData.append('country', serviceFormData.country)
         formData.append('state', serviceFormData.state)
-        formData.append('price', JSON.stringify(serviceFormData.price))
+        formData.append('price', serviceFormData.price)
         formData.append('desc', serviceFormData.desc)
         formData.append('availability', JSON.stringify(serviceFormData.availability))
-        // serviceFormData.media?.forEach((image: any) => {
-        //     formData.append('media', image)
-        // })
-        serviceApis.creatService(serviceFormData, { setIsLoading })
+        formData.append('media', serviceFormData.media)
+        serviceApis.creatService(formData, { setIsLoading })
         openModal()
     }
 
     const confirmPublishing = () => {
-        let mostRecentService = JSON.parse(localStorage.getItem('recentService') || '')
+        let mostRecentService = JSON.parse(localStorage.getItem('recentService') || 'null')
         serviceApis.updateServicePublish(mostRecentService._id)
+        closeModal()
     }
 
     const cancelPublishing = () => {
@@ -187,50 +197,48 @@ const NewService: FC<NewServiceProps> = () => {
     }, [])
 
     return ( 
-        <>
-            <div className="services max-w-screen lg:px-[32px] px-5">
-                <header className="py-6 lg:mx-[-32px] lg:px-[32px] lg:bg-white lg:mb-8 mb-[30px]">
-                    <div className="item flex flex-wrap gap-[25px] items-center">
-                        <span className="text-2xl font-semibold">My Service</span>
-                        <span className="text-[#707070] text-2xl font-semibold">Service Creation</span>
-                    </div>
-                </header>
-                <main className="">
-                    <Card className="rounded-t-[16px] p-5 lg:pl-[96px] lg:pr-[350px] lg:py-[90px]">
-                        <CardContent className="flex flex-col">
-                            <div className="top">
-                                <span className="text-[20px] font-bold">Service Setup steps</span>
-                            </div>
-                            <div className="stepper mt-7 mb-[50px]">
-                                <Stepper steps={steps} activeStep={activeStep} />
-                            </div>
-                            <div className="forms">
-                                {activeStep === 0 && <ServiceInfoForm formData={serviceFormData} handleChange={handleChange}
-                                    handleCategoryChange={handleCategory} handleCountryChange={handleCountry} handleStateChange={handleState}
-                                    handleSubCatChange={handleSubCat} cats={categories} subCats={subCategories} />}
-                                {activeStep === 1 && <ServiceSetupForm formData={serviceFormData} handleChange={handleChange} addDays={addDays} />}
-                                {activeStep === 2 && <GallarySetup mediaSrc={mediaSrc} formData={serviceFormData} handleChange={handleChange} />}
-                            </div>
-                            <div className="btns flex items-center justify-end gap-4 mt-[45px]">
-                                {activeStep !== 0 &&
-                                    <Button onClick={() => setActiveStep(activeStep - 1)} className="btn-sp">Previous</Button>}
-                                {activeStep !== steps.length - 1 &&
-                                    <Button onClick={nextForm} className="btn-sp">Next</Button>}
-                                {activeStep === steps.length - 1 && !isLoading && <Button onClick={processServiceCreation} className="btn-sp">Done</Button>}
-                                {isLoading && <Button className="btn shadow-md mt-8 py-[10px]"><ButtonLoading /></Button>}
-                            </div>
-                        </CardContent>
-                    </Card>
-                </main>
+        <div className="services max-w-screen lg:px-[32px] px-5">
+            <header className="py-6 lg:mx-[-32px] lg:px-[32px] lg:bg-white lg:mb-8 mb-[30px]">
+                <div className="item flex flex-wrap gap-[25px] items-center">
+                    <span className="text-2xl font-semibold">My Service</span>
+                    <span className="text-[#707070] text-2xl font-semibold">Service Creation</span>
+                </div>
+            </header>
+            <main className="">
+                <Card className="rounded-t-[16px] p-5 lg:pl-[96px] lg:pr-[350px] lg:py-[90px]">
+                    <CardContent className="flex flex-col">
+                        <div className="top">
+                            <span className="text-[20px] font-bold">Service Setup steps</span>
+                        </div>
+                        <div className="stepper mt-7 mb-[50px]">
+                            <Stepper steps={steps} activeStep={activeStep} />
+                        </div>
+                        <div className="forms">
+                            {activeStep === 0 && <ServiceInfoForm formData={serviceFormData} handleChange={handleChange}
+                                handleCategoryChange={handleCategory} handleCountryChange={handleCountry} handleStateChange={handleState}
+                                handleSubCatChange={handleSubCat} cats={categories} subCats={subCategories} />}
+                            {activeStep === 1 && <ServiceSetupForm formData={serviceFormData} handleChange={handleChange} addDays={addDays} />}
+                            {activeStep === 2 && <GallarySetup mediaSrc={mediaSrc} formData={serviceFormData} handleChange={handleChange} />}
+                        </div>
+                        <div className="btns flex items-center justify-end gap-4 mt-[45px]">
+                            {activeStep !== 0 &&
+                                <Button onClick={() => setActiveStep(activeStep - 1)} className="btn-sp">Previous</Button>}
+                            {activeStep !== steps.length - 1 &&
+                                <Button onClick={nextForm} className="btn-sp">Next</Button>}
+                            {activeStep === steps.length - 1 && !isLoading && <Button onClick={processServiceCreation} className="btn-sp">Done</Button>}
+                            {isLoading && <Button className="btn shadow-md mt-8 py-[10px]"><ButtonLoading /></Button>}
+                        </div>
+                    </CardContent>
+                </Card>
+            </main>
 
-                <Modal isOpen={isOpen} onClose={closeModal} onConfirm={confirmPublishing} onCancel={cancelPublishing} cancelBtn="No" confirmBtn="Yes">
-                    <div className="modal-content flex flex-col gap-[17px] items-center justify-center">
-                        <span className="text-2xl text-custom-blue font-bold">Service Listing successful</span>
-                        <span className="text-[#777] text-base">Are you sure you want to publish this service?</span>
-                    </div>
-                </Modal>
-            </div>
-        </>
+            <Modal isOpen={isOpen} onClose={closeModal} onConfirm={confirmPublishing} onCancel={cancelPublishing} cancelBtn="No" confirmBtn="Yes">
+                <div className="modal-content flex flex-col gap-[17px] items-center justify-center">
+                    <span className="text-2xl text-custom-blue font-bold">Service Listing successful</span>
+                    <span className="text-[#777] text-base">Are you sure you want to publish this service?</span>
+                </div>
+            </Modal>
+        </div>
     );
 }
  
