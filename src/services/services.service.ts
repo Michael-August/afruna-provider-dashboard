@@ -7,6 +7,7 @@ import { createService, setServices, setSingleService } from "../redux/features/
 import { toast } from "react-toastify";
 import { handleAuthErrors } from "../utils/auth.util";
 import { T_loading_provider } from "../types/loader.types";
+import { setTotalPages } from "../redux/features/app/util_slice";
 
 export default class Service {
     private store: TStore
@@ -28,19 +29,20 @@ export default class Service {
 
     async getServiceSubCategories(categoryId: string) {
         try {
-            const {data} = await axios.get<TSuccessResponse<IServiceSubCategory[]>>(`/api/servicecategories/${categoryId}/nested`, headers)
+            const {data} = await axios.get<TSuccessResponse<IServiceSubCategory[]>>(`/api/servicecategories/${categoryId}/sub`, headers)
             return data
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>)
         }
     }
 
-    async getServices(loading_opt: T_loading_provider) {
+    async getServices(loading_opt: T_loading_provider, page: number) {
         const { setIsLoading } = loading_opt
         setIsLoading && setIsLoading(true)
         try {
-            const { data } = await axios.get<TSuccessResponse<IService[]>>('/api/services', headers)
+            const { data } = await axios.get<TSuccessResponse<IService[]>>(`/api/services?page=${page}`, headers)
             store.dispatch(setServices(data.data))
+            store.dispatch(setTotalPages(data.totalPages))
             toast.success('Fetch successful', {autoClose: 1000})
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>);

@@ -6,6 +6,7 @@ import { setBanks, setSingleTransaction, setTransactions, setWallet } from "../r
 import { toast } from "react-toastify";
 import { handleAuthErrors } from "../utils/auth.util";
 import { headers } from "../constants/http_config";
+import { setTotalPages } from "../redux/features/app/util_slice";
 
 export default class Transaction {
     private store: TStore
@@ -24,9 +25,9 @@ export default class Transaction {
         }
     }
 
-    async getTransactions() {
+    async getTransactions(page: number) {
         try {
-            const { data } = await axios.get<TSuccessResponse<ITransaction[]>>('/api/transactions', headers)
+            const { data } = await axios.get<TSuccessResponse<ITransaction[]>>(`/api/transactions?page${page}`, headers)
             store.dispatch(setTransactions(data.data))
             toast.success('Fetch successful', {autoClose: 1000})
         } catch (error) {
@@ -38,6 +39,7 @@ export default class Transaction {
         try {
             const { data } = await axios.get<TSuccessResponse<ITransaction>>(`/api/transactions/${transactionId}`, headers)
             store.dispatch(setSingleTransaction(data.data))
+            store.dispatch(setTotalPages(data.totalPages))
             toast.success('Fetch Succesful', {autoClose: 1000})
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>);
