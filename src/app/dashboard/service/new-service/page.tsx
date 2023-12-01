@@ -36,6 +36,10 @@ const NewService: FC<NewServiceProps> = () => {
     const [categories, setCategories] = useState<IServiceCategory[]>()
     const [subCategories, setSubCategories] = useState<IServiceSubCategory[]>()
 
+    let pictures: any[] = []
+    let licenseAndCertification: any[] = []
+    let insuranceCoverage: any[] = []
+
     const [serviceFormData, setServiceFormData] = useState<any>({
         name: '',
         category: '',
@@ -52,7 +56,9 @@ const NewService: FC<NewServiceProps> = () => {
                 to: '',
             }
         },
-        media: {}
+        media: {},
+        insuranceCoverage: {},
+        licenseAndCertification: {}
     })
 
     const { isOpen, openModal, closeModal } = useModal();
@@ -88,7 +94,21 @@ const NewService: FC<NewServiceProps> = () => {
                 };
 
                 reader.readAsDataURL(file);
-                setServiceFormData({ ...serviceFormData, media: file })
+                pictures.push(file)
+                console.log(pictures)
+            }
+            // setServiceFormData({...serviceFormData, media: [...serviceFormData.media, file]});
+        }
+        if (name == 'insuranceCoverage') {
+            const file = e.target.files[0]
+            if (file) {
+                insuranceCoverage.push(file)
+            }
+        }
+        if (name == 'licenseAndCertification') {
+            const file = e.target.files[0]
+            if (file) {
+                licenseAndCertification.push(file)
             }
         }
         setServiceFormData({ ...serviceFormData, [name]: value });
@@ -122,10 +142,6 @@ const NewService: FC<NewServiceProps> = () => {
                 toast.error('Category is required')
                 return
             }
-            // if (serviceFormData.subCategory == '') {
-            //     toast.error('Subcategory is required')
-            //     return
-            // }
             if (serviceFormData.country == '') {
                 toast.error('Country is required')
                 return
@@ -151,6 +167,16 @@ const NewService: FC<NewServiceProps> = () => {
                 return
             }
 
+            if (serviceFormData.availability.hours.from == "") {
+                toast.error('Select at Starting time')
+                return
+            }
+
+            if (serviceFormData.availability.hours.to == "") {
+                toast.error('Select at Ending time')
+                return
+            }
+
             setActiveStep(activeStep + 1)
         }
     }
@@ -167,7 +193,9 @@ const NewService: FC<NewServiceProps> = () => {
         formData.append('price', serviceFormData.price)
         formData.append('desc', serviceFormData.desc)
         formData.append('availability', JSON.stringify(serviceFormData.availability))
-        formData.append('media', serviceFormData.media)
+        pictures.forEach(image => formData.append('photos', image))
+        licenseAndCertification.forEach(cert => formData.append('licenseAndCertification', cert))
+        insuranceCoverage.forEach(insurance => formData.append('insuranceCoverage', insurance))
         serviceApis.creatService(formData, { setIsLoading })
         openModal()
     }

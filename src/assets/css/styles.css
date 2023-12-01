@@ -224,6 +224,10 @@
     clip-path: circle();
 }
 
+.smallProfile {
+    clip-path: circle();
+}
+
 /* Loaders */
 .lds-facebook {
     display: inline-block;

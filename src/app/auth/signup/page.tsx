@@ -167,7 +167,7 @@ const Register: FC<Props> = () => {
                                     </ErrorMessage>
                                 </div>
 
-                                {!isLoading && <Button type="submit" className="btn shadow-md mt-8 py-[10px]">Log in</Button>}
+                                {!isLoading && <Button type="submit" className="btn shadow-md mt-8 py-[10px]">Sign up</Button>}
                                 {isLoading && <Button className="btn shadow-md mt-8 py-[10px]"><ButtonLoading /></Button>}
                             </Form>
                         </Formik>

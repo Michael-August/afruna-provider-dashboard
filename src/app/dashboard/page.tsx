@@ -28,6 +28,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/src/redux/store";
 
 import star from '@/src/assets/icons/star.png'
+import { Loader2 } from "lucide-react";
+import BookingService from "@/src/services/booking.service";
 
 interface DashboardProps {
     
@@ -35,24 +37,16 @@ interface DashboardProps {
  
 const Dashboard: FC<DashboardProps> = () => {
     const dashboardApis = new DashboardService()
+    const bookingApis = new BookingService()
 
     const [isLoading, setIsLoading] = useState(false)
     const user = useSelector((state: RootState) => state.auth.userBio)
     const card = useSelector((state: RootState) => state.dashboard.dashboardCards)
     const bookings = useSelector((state: RootState) => state.dashboard.dashboardBookings)
 
-    const [localUser, setLocalUser] = useState<IUserBio>({
-        _id: "",
-        avatar: "",
-        country: "",
-        email: "",
-        firstName: "",
-        followers: 0,
-        following: 0,
-        lastName: "",
-        phoneNumber: "",
-        role: "",
-    });
+    const [btnIsLoading, setBtnIsLoading] = useState(false)
+
+    const [localUser, setLocalUser] = useState<IUserBio>(JSON.parse(sessionStorage.getItem("user") || ""));
 
     const formatDate = (date: string) => {
         const createdAtDate = new Date(date);
@@ -66,11 +60,17 @@ const Dashboard: FC<DashboardProps> = () => {
         return `${month} ${day}, ${year}`
     }
 
+    const updateStatus = (bookingId: string, status: string) => {
+        let payload = { status }
+        
+        bookingApis.updateBooking(bookingId, payload, {setIsLoading: setBtnIsLoading})
+    }
+
     useEffect(() => {
-        if (!user) {
-            setLocalUser(JSON.parse(sessionStorage.getItem("user") || "") );
-        }
-        dashboardApis.getDashboardCards({setIsLoading}, user._id)
+        // if (!user) {
+        //     setLocalUser(JSON.parse(sessionStorage.getItem("user") || "") );
+        // }
+        dashboardApis.getDashboardCards({setIsLoading}, localUser._id)
         dashboardApis.getBookings()
     }, [])
 
@@ -171,7 +171,7 @@ const Dashboard: FC<DashboardProps> = () => {
                                                     <Image className="lg:mr-[21px] mb-[25px] lg:mb-0 w-full lg:w-[231px]" src={booking4} alt="" />
                                                     <div className="details flex flex-col mx-[25px] mb-[30px] lg:mx-0 lg:mb-0 justify-between gap-5">
                                                         <div className="top flex items-center justify-between">
-                                                            <span className="text-lg mr-10 font-bold text-custom-blue">Video Editing</span>
+                                                            <span className="text-lg mr-10 font-bold text-custom-blue">{booking.serviceId?.name}</span>
                                                             {booking.status === 'cancled' && <span className="status canceled">Canceled</span>}
                                                             {booking.status === 'completed' &&<span className="status completed">Completed</span>}
                                                             {booking.status === 'in progress' &&<span className="status in-progress">in progress</span>}
@@ -195,17 +195,35 @@ const Dashboard: FC<DashboardProps> = () => {
                                                         <div className="flex items-center justify-between">
                                                             <span className="text-sm mr-10 font-bold text-custom-blue">Customer</span>
                                                             <div className="extra flex items-center">
-                                                                :<Image width={28} src={profilpic} alt="" />
-                                                                <span className="text-[#787878] ml-[10px] text-xs">garima Masilala</span>
-                                                                <span className="text-[#787878] text-xs ml-5">GARIm@gmail.com</span>
+                                                                :<Image className="smallProfile" width={40} src={`https://${booking.customerId.avatar}`} height={40} alt="" />
+                                                                <span className="text-[#787878] ml-[10px] text-xs">{ booking.customerId.firstName } { booking.customerId.lastName }</span>
+                                                                <span className="text-[#787878] text-xs ml-5">{ booking.customerId.email }</span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div className="btns-reviews mr-[60px] flex flex-col-reverse lg:flex-col items-center justify-center gap-[35px]">
                                                     <div className="btns flex flex-col mb-[23px] lg:mb-0 lg:flex lg:flex-row lg:items-center gap-[10px]">
-                                                        
-                                                        
+                                                        {booking.status === 'pending' &&
+                                                            <Button className="btn-sp" onClick={() => updateStatus(booking._id, 'in progress')}>
+                                                                {btnIsLoading ? (
+                                                                    <Loader2 className=" h-6 w-6 animate-spin text-white" />
+                                                                    ) : (
+                                                                    "Start rendering"
+                                                                )}
+                                                            </Button>}
+                                                        {booking.status === 'in progress' &&
+                                                            <>
+                                                                <Button className="btn w-40 lg:w-auto"><Image src={chaticon} alt="" /> Chat</Button>
+                                                                <Button onClick={() => updateStatus(booking._id, 'completed')} className="bg-[#E3F7FF] w-40 lg:w-auto text-sm text-[#00AEEF] px-[18px] py-[10px] rounded-[8px] hover:bg-[#cde1e9]">
+                                                                    {btnIsLoading ? (
+                                                                        <Loader2 className=" h-6 w-6 animate-spin text-white" />
+                                                                        ) : (
+                                                                        "Done"
+                                                                    )}
+                                                                </Button>
+                                                            </>
+                                                        }
                                                     </div>
                                                     { booking.status === 'completed' &&
                                                         <div>
@@ -224,10 +242,13 @@ const Dashboard: FC<DashboardProps> = () => {
                                         </Card>
                                     </div>
                                 ))}
+                                {bookings.length === 0 &&<div className="nobooking flex justify-center items-center">
+                                    No Booking for you yet.
+                                </div>}
                             </div>
-                            <div className="footer-btn flex items-center justify-center">
+                            {bookings.length !== 0 && <div className="footer-btn flex items-center justify-center">
                                 <Button className="btn w-60">View all History</Button>
-                            </div>
+                            </div>}
                         </CardContent>
                     </Card>
 
@@ -235,94 +256,87 @@ const Dashboard: FC<DashboardProps> = () => {
                     <div className="mobile-bokings flex flex-col lg:hidden">
                         <header className="text-xl font-bold text-custom-blue mb-[15px]">Recent Booking</header>
                         <div className="bookings flex flex-col gap-[29px] mb-[23px]">
-                            <Card className="w-full rounded-[8px] pb-[48px] bg-[#FAFCFF]">
-                                <CardContent className="">
-                                    <Image className="mb-[25px] w-full" src={booking2} alt="" />
-                                    <div className="details flex flex-col justify-between gap-6 mx-[25px] mb-[30px]">
-                                        <div className="top flex items-center justify-between">
-                                            <span className="text-lg mr-10 font-bold text-custom-blue">Architetural</span>
-                                            <span className="status-mobile text-base in-progress">In Progress</span>
-                                        </div>
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-base mr-10 font-bold text-custom-blue">Booking Date</span>
-                                            <span className="text-[#787878] text-base">:January 22, 2023</span>
-                                        </div>
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-base mr-10 font-bold text-custom-blue">Amount</span>
-                                            <div className="extra flex gap-[6px]">
-                                                <span className="text-[#787878] text-base">:#159000</span>
-                                                <span className="text-[#1A6BBA] text-base bg-[#E1F0FF] px-[10px] py-3px] border-dotted">COD</span>
+                            {bookings.map(booking => (
+                                <Card key={booking._id} className="w-full rounded-[8px] pb-[48px] bg-[#FAFCFF]">
+                                    <CardContent className="">
+                                        <Image className="mb-[25px] w-full" src={booking2} alt="" />
+                                        <div className="details flex flex-col justify-between gap-6 mx-[25px] mb-[30px]">
+                                            <div className="top flex items-center justify-between">
+                                                <span className="text-lg mr-10 font-bold text-custom-blue">{booking.serviceId.name}</span>
+                                                {booking.status === 'cancled' && <span className="status canceled">Canceled</span>}
+                                                {booking.status === 'completed' &&<span className="status completed">Completed</span>}
+                                                {booking.status === 'in progress' &&<span className="status in-progress">in progress</span>}
+                                                {booking.status === 'pending' &&<span className="status pending">Pending</span>}
+                                            </div>
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-base mr-10 font-bold text-custom-blue">Booking Date</span>
+                                                <span className="text-[#787878] text-base">:{formatDate(booking.createdAt)}</span>
+                                            </div>
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-base mr-10 font-bold text-custom-blue">Amount</span>
+                                                <div className="extra flex gap-[6px]">
+                                                    <span className="text-[#787878] text-base">:#{booking.amount}</span>
+                                                    <span className="text-[#1A6BBA] text-base bg-[#E1F0FF] px-[10px] py-3px] border-dotted">COD</span>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-base mr-10 font-bold text-custom-blue">Location</span>
+                                                <span className="text-[#787878] text-base">:{booking.location}</span>
+                                            </div>
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-base mr-10 font-bold text-custom-blue">Customer</span>
+                                                <div className="extra flex items-center">
+                                                    :<Image className="smallProfile" width={40} src={`https://${booking.customerId.avatar}`} height={40} alt="" />
+                                                    <span className="text-[#787878] ml-[10px] text-xs">{booking.customerId.firstName} { booking.customerId.lastName }</span>
+                                                    <span className="text-[#787878] text-xs ml-5">{ booking.customerId.email }</span>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-base mr-10 font-bold text-custom-blue">Location</span>
-                                            <span className="text-[#787878] text-base">:Kaduna</span>
-                                        </div>
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-base mr-10 font-bold text-custom-blue">Customer</span>
-                                            <div className="extra flex items-center">
-                                                :<Image width={40} src={profilpic} alt="" />
-                                                <span className="text-[#787878] ml-[10px] text-xs">garima Masilala</span>
-                                                <span className="text-[#787878] text-xs ml-5">GARIm@gmail.com</span>
+                                        <div className="btns-reviews mr-[60px] flex flex-col items-center justify-center">
+                                            <div className="btns flex flex-col items-center justify-center gap-[10px]">
+                                                <div className="btns flex flex-col mb-[23px] lg:mb-0 lg:flex lg:flex-row lg:items-center gap-[10px]">
+                                                        {booking.status === 'pending' &&
+                                                            <Button className="btn-sp" onClick={() => updateStatus(booking._id, 'in progress')}>
+                                                                {btnIsLoading ? (
+                                                                    <Loader2 className=" h-6 w-6 animate-spin text-white" />
+                                                                    ) : (
+                                                                    "Start rendering"
+                                                                )}
+                                                            </Button>}
+                                                        {booking.status === 'in progress' &&
+                                                            <>
+                                                                <Button className="btn w-40 lg:w-auto"><Image src={chaticon} alt="" /> Chat</Button>
+                                                                <Button onClick={() => updateStatus(booking._id, 'completed')} className="bg-[#E3F7FF] w-40 lg:w-auto text-sm text-[#00AEEF] px-[18px] py-[10px] rounded-[8px] hover:bg-[#cde1e9]">
+                                                                    {btnIsLoading ? (
+                                                                        <Loader2 className=" h-6 w-6 animate-spin text-white" />
+                                                                        ) : (
+                                                                        "Done"
+                                                                    )}
+                                                                </Button>
+                                                            </>
+                                                        }
+                                                    </div>
+                                                    { booking.status === 'completed' &&
+                                                        <div>
+                                                            <div className="stars flex">
+                                                                <Image src={star} alt="" />
+                                                                <Image src={star} alt="" />
+                                                                <Image src={star} alt="" />
+                                                                <Image src={star} alt="" />
+                                                                <Image src={star} alt="" />
+                                                            </div>
+                                                            <span className="hidden lg:block text-sm text-[#019DDC] font-semibold cursor-pointer">View Details</span>
+                                                        </div>
+                                                    }
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className="btns-reviews mr-[60px] flex flex-col items-center justify-center">
-                                        <div className="btns flex flex-col items-center justify-center gap-[10px]">
-                                            <Button className="btn w-40">Re Book</Button>
-                                            <Button className="w-40 bg-[#E3F7FF] text-sm text-[#00AEEF] px-[18px] py-[10px] rounded-[8px] hover:bg-[#cde1e9]">Reschedule</Button>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-
-                            <Card className="w-full rounded-[8px] pb-[48px] bg-[#FAFCFF]">
-                                <CardContent className="">
-                                    <Image className="mb-[25px] w-full" src={booking4} alt="" />
-                                    <div className="details flex flex-col justify-between gap-6 mx-[25px] mb-[30px]">
-                                        <div className="top flex items-center justify-between">
-                                            <span className="text-lg mr-10 font-bold text-custom-blue">Architetural</span>
-                                            <span className="status-mobile text-base in-progress">In Progress</span>
-                                        </div>
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-base mr-10 font-bold text-custom-blue">Booking Date</span>
-                                            <span className="text-[#787878] text-base">:January 22, 2023</span>
-                                        </div>
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-base mr-10 font-bold text-custom-blue">Amount</span>
-                                            <div className="extra flex gap-[6px]">
-                                                <span className="text-[#787878] text-base">:#159000</span>
-                                                <span className="text-[#1A6BBA] text-base bg-[#E1F0FF] px-[10px] py-3px] border-dotted">COD</span>
-                                            </div>
-                                        </div>
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-base mr-10 font-bold text-custom-blue">Location</span>
-                                            <span className="text-[#787878] text-base">:Kaduna</span>
-                                        </div>
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-base mr-10 font-bold text-custom-blue">Customer</span>
-                                            <div className="extra flex items-center">
-                                                :<Image width={40} src={profilpic} alt="" />
-                                                <span className="text-[#787878] ml-[10px] text-xs">garima Masilala</span>
-                                                <span className="text-[#787878] text-xs ml-5">GARIm@gmail.com</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="btns-reviews mr-[60px] flex flex-col items-center justify-center">
-                                        <div className="btns flex flex-col items-center gap-[10px]">
-                                            <Button className="btn w-40 flex items-center justify-center gap-[6px]">
-                                                <Image src={chaticon} alt="" />
-                                                Chat
-                                            </Button>
-                                            <Button className="bg-[#E3F7FF] w-40 text-sm text-[#00AEEF] px-[18px] py-[10px] rounded-[8px] hover:bg-[#cde1e9]">Cancel</Button>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
+                                    </CardContent>
+                                </Card>
+                            ))}
                         </div>
-                        <div className="footer-btn flex items-center justify-center">
+                        {bookings.length !== 0 && <div className="footer-btn flex items-center justify-center">
                             <Button className="btn w-60">View all History</Button>
-                        </div>
+                        </div>}
                     </div>
                 </section>
             </main>

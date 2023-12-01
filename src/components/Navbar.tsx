@@ -110,7 +110,7 @@ const NavBar: FC<NavBarProps> = ({ source }) => {
                                     </div>
                                 </div>
                                 <div className="profile  hidden lg:flex items-center gap-2">
-                                    <Image src={profilePics} alt="help" />
+                                    <Image width={34} height={34} className="profileImg" src={user.avatar} alt="help" />
                                     <span className="text-base font-bold text-custom-blue">{user.firstName} { user.lastName }</span>
                                     <Image src={arrowDown} alt="help" />
                                 </div>

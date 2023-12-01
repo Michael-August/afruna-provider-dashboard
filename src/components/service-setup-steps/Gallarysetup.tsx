@@ -3,6 +3,7 @@ import { FC } from "react";
 
 import uploadIcon from '../../assets/icons/upload.png'
 import { ICreateService } from "@/src/interfaces/IService";
+import { Label } from "../ui/label";
 
 interface GallarySetupProps {
     formData: ICreateService
@@ -33,9 +34,36 @@ const GallarySetup: FC<GallarySetupProps> = ({ mediaSrc, formData, handleChange 
                         </div>
                     </div>
 
-                    {mediaSrc && <div className="img-preview">
-                        <Image className="rounded-[4px]" src={mediaSrc} alt="" width={105} height={72} />
-                    </div>}
+                    {mediaSrc &&
+                        <div className="img-preview">
+                            <Image className="rounded-[4px]" src={mediaSrc} alt="" width={105} height={72} />
+                        </div>
+                    }
+
+                    <div className="form-control">
+                        <div className="custom-upload-btn">
+                            <Label className="text-sm font-semibold">Licenses and Certifications*</Label>
+                            <input type="file" hidden name="licenseAndCertification" onChange={handleChange} id="licenseAndCertification" />
+                            <label htmlFor="licenseAndCertification" className="border-[1px] w-full block rounded-[8px] shadow-md border-[#FED6AC] p-[10px] cursor-pointer">
+                                <span className="button flex items-center w-fit gap-2 text-black bg-[#FED6AC] px-4 py-2 text-sm">
+                                    <Image src={uploadIcon} alt="" />
+                                    Browse
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div className="form-control">
+                        <div className="custom-upload-btn">
+                            <Label className="text-sm font-semibold">Insurance Coverage</Label>
+                            <input type="file" hidden name="insuranceCoverage" onChange={handleChange} id="insuranceCoverage" />
+                            <label htmlFor="insuranceCoverage" className="border-[1px] w-full block rounded-[8px] shadow-md border-[#FED6AC] p-[10px] cursor-pointer">
+                                <span className="button flex items-center w-fit gap-2 text-black bg-[#FED6AC] px-4 py-2 text-sm">
+                                    <Image src={uploadIcon} alt="" />
+                                    Browse
+                                </span>
+                            </label>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>

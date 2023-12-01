@@ -23,6 +23,7 @@ import Loading from "@/src/components/loading";
 import { Loader2 } from "lucide-react";
 import Pagination from "@/src/components/Pagination";
 import { useRouter, useSearchParams } from "next/navigation";
+import '@/src/assets/css/styles.css'
 
 interface BookingsProps {
     
@@ -113,7 +114,7 @@ const Bookings: FC<BookingsProps> = () => {
                                             <Image className="lg:mr-[21px] mb-[25px] lg:mb-0 w-full lg:w-[231px]" src={booking4} alt="" />
                                             <div className="details flex flex-col mx-[25px] mb-[30px] lg:mx-0 lg:mb-0 justify-between gap-5">
                                                 <div className="top flex items-center justify-between">
-                                                    <span className="text-lg mr-10 font-bold text-custom-blue">Video Editing</span>
+                                                    <span className="text-lg mr-10 font-bold text-custom-blue">{booking.serviceId?.name}</span>
                                                     {booking.status === 'cancled' && <span className="status canceled">Canceled</span>}
                                                     {booking.status === 'completed' &&<span className="status completed">Completed</span>}
                                                     {booking.status === 'in progress' &&<span className="status in-progress">in progress</span>}
@@ -137,9 +138,9 @@ const Bookings: FC<BookingsProps> = () => {
                                                 <div className="flex items-center justify-between">
                                                     <span className="text-sm mr-10 font-bold text-custom-blue">Customer</span>
                                                     <div className="extra flex items-center">
-                                                        :<Image width={28} src={profilpic} alt="" />
-                                                        <span className="text-[#787878] ml-[10px] text-xs">garima Masilala</span>
-                                                        <span className="text-[#787878] text-xs ml-5">GARIm@gmail.com</span>
+                                                        :<Image className="smallProfile" width={40} src={`https://${booking.customerId.avatar}`} height={40} alt="" />
+                                                        <span className="text-[#787878] ml-[10px] text-xs">{ booking.customerId.firstName } { booking.customerId.lastName }</span>
+                                                        <span className="text-[#787878] text-xs ml-5">{ booking.customerId.email }</span>
                                                     </div>
                                                 </div>
                                             </div>

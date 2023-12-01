@@ -5,6 +5,8 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 const initialState = {
     conversations: [] as IConversation[],
     chatDetails: {},
+    updateConversation: {},
+    updateMessage: {},
     users: [] as IUser[],
     messages: [] as any[]
 }
@@ -15,6 +17,9 @@ const chat_slice = createSlice({
     reducers: {
         setConversations: (state, action: PayloadAction<IConversation[]>) => {
             state.conversations = action.payload
+        },
+        updateConversation: (state, action: PayloadAction<IConversation>) => {
+            state.conversations = [action.payload, ...state.conversations]
         },
         setUsers: (state, action: PayloadAction<IUser[]>) => {
             state.users = action.payload
@@ -28,5 +33,5 @@ const chat_slice = createSlice({
     }
 })
 
-export const { setConversations, setUsers, setMessages, createMessage } = chat_slice.actions
+export const { setConversations, setUsers, setMessages, updateConversation, createMessage } = chat_slice.actions
 export default chat_slice.reducer

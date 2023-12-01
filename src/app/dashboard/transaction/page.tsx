@@ -82,6 +82,7 @@ const Transactions: FC<TransactionsProps> = () => {
                 toast.success('Bank details updated')
                 cancelBankUpdate()
                 cancelConfirmBankUpdate()
+                transationApis.getWalletDetails()
             }
         })
     }

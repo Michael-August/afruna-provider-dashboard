@@ -10,7 +10,11 @@ const nextConfig = {
 		];
 	},
 	images: {
-		domains: ["afruna-bucket.nyc3.digitaloceanspaces.com","lh3.googleusercontent.com"],
+		domains: [
+			"afruna-bucket.nyc3.digitaloceanspaces.com",
+			"lh3.googleusercontent.com",
+			"nyc3.digitaloceanspaces.com",
+		],
 	},
 };
 

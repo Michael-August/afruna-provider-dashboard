@@ -23,8 +23,9 @@ import ChatService from "@/src/services/chat.service";
 import clsx from "clsx";
 import { IUser, IUserBio } from "@/src/interfaces/IUser";
 import { IConversation } from "@/src/interfaces/IChat";
-import { setMessages } from "@/src/redux/features/app/chat_slice";
+import { setMessages, updateConversation } from "@/src/redux/features/app/chat_slice";
 import Loading from "../../../components/loading";
+import '@/src/assets/css/styles.css'
 
 interface ChatProps {}
 
@@ -53,10 +54,12 @@ const Chat: FC<ChatProps> = () => {
     role: "",
   });
   const [messageToSend, setMessageToSend] = useState("");
+  const [newUserMessage, setNewUserMessage] = useState<any[]>([])
 
-  const messages = useSelector((state: RootState) => state.chat.messages);
+  let messages = useSelector((state: RootState) => state.chat.messages);
 
   const startNewChat = (userToChat: IUser) => {
+    // messages = []
     setNewUserChat(userToChat);
     setIsNewChat(true);
     closeModal();
@@ -65,6 +68,7 @@ const Chat: FC<ChatProps> = () => {
   const fetchMessages = (friend: any) => {
     chatApis.getMessages(friend._id);
     setFriendToChat(friend);
+    setIsNewChat(false)
   };
 
   const fetchUsersToChat = () => {
@@ -84,11 +88,21 @@ const Chat: FC<ChatProps> = () => {
     if (isNewChat) {
       payload.to = newUserChat;
       chatApis.sendMessage(payload);
-      chatApis.getConversations({ setIsLoading });
+      let newConversation: IConversation = {
+        _id: '',
+        alias: `${newUserChat?.firstName} ${newUserChat?.lastName}`,
+        aliasAvatar: '',
+        lastMessage: payload.message,
+        recipients: [payload.to, user._id],
+        unreadMessages: 0
+      }
+      store.dispatch(updateConversation(newConversation))
+      setNewUserMessage([...newUserMessage, payload])
     } else {
       payload.to = friendToChat;
       chatApis.sendMessage(payload);
     }
+    setMessageToSend("")
   };
 
   useEffect(() => {
@@ -235,7 +249,7 @@ const Chat: FC<ChatProps> = () => {
                     </div>
                     <hr className="mb-5 -mx-6" />
                     <div className="chats">
-                      {messages.map((message) => (
+                      {!isNewChat ? messages.map((message) => (
                         <div className="sent-received-messages">
                           <div
                             className={clsx(
@@ -274,7 +288,31 @@ const Chat: FC<ChatProps> = () => {
                             </div>
                           </div>
                         </div>
-                      ))}
+                      )) :
+                        <div className="">
+                          {
+                            newUserMessage.length !== 0 ? newUserMessage.map(message => (
+                              <div>
+                                <div className="sent">
+                                  <div className="messages">
+                                    <span
+                                      style={{ whiteSpace: "pre-line" }}
+                                      className="message"
+                                    >
+                                      {message.message}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            ))
+                               :
+                              <div className="flex items-center justify-center">
+                                Start chat with this user
+                              </div>
+                          }
+                          
+                        </div>
+                      }
                     </div>
 
                     <div className="input w-[90%] lg:w-[95%] flex items-center justify-between rounded-[8px] absolute bottom-6 border border-[#D5D5E6]">
