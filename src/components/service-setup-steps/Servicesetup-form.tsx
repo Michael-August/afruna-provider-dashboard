@@ -62,10 +62,10 @@ const ServiceSetupForm: FC<ServiceSetupFormProps> = ({addDays, formData, handleC
                                     className="border-[1px] w-full shadow-md text-sm border-[#FFDBB6] rounded-[6px] px-[19px] py-4 focus:outline-none" />
                             </div>
                         </div>
-                        <div className="add-service flex items-center cursor-pointer gap-2">
+                        {/* <div className="add-service flex items-center cursor-pointer gap-2">
                             <span className="text-4xl text-[#0199D8] font-semibold">+</span>
                             <span className="text-base text-[#0199D8] font-semibold">Add Hours</span>
-                        </div>
+                        </div> */}
                     </div>
                 </form>
             </div>

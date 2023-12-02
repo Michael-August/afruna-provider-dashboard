@@ -199,7 +199,7 @@ const NewService: FC<NewServiceProps> = () => {
         formData.append('licenseAndCertification', licenseAndCertification)
         formData.append('insuranceCoverage', insuranceCoverage)
         serviceApis.creatService(formData, { setIsLoading }, setShowPublishModal)
-        if(showPublishModal) openModal()
+        openModal()
     }
 
     const confirmPublishing = () => {

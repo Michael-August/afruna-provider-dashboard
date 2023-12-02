@@ -122,7 +122,7 @@ const ServiceInfoForm: FC<ServiceInfoFormProps> = ({ formData, handleChange, han
                                 className="border-[1px] h-[100px] w-full shadow-md text-sm border-[#FFDBB6] rounded-[6px] px-[19px] py-4 focus:outline-none" />
                         </div>
 
-                        <div className="additional-services flex flex-col gap-[22px] mt-[8px]">
+                        {/* <div className="additional-services flex flex-col gap-[22px] mt-[8px]">
                             <span className="text-[20px] text-custom-blue font-semibold">Additional Service</span>
                             <div className="double-input gap-[22px] lg:flex lg:gap-[35px]">
                                 <div className="form-control w-full mb-[22px] flex flex-col gap-2">
@@ -140,7 +140,7 @@ const ServiceInfoForm: FC<ServiceInfoFormProps> = ({ formData, handleChange, han
                                 <span className="text-4xl text-[#2B33DD] font-semibold">+</span>
                                 <span className="text-base text-[#2B33DD] font-semibold">Add Additional Service</span>
                             </div>
-                        </div>
+                        </div> */}
                     </form>
                 </div>
             </div>
