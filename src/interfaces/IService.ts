@@ -8,7 +8,7 @@ export interface IService {
     insuranceCoverage?: []
     licenseAndCertification?: []
     name: string
-    photos?: []
+    photos: []
     price: number
     publish: boolean
     providerId: string

@@ -8,7 +8,7 @@ import { Label } from "../ui/label";
 interface GallarySetupProps {
     formData: ICreateService
     handleChange: any
-    mediaSrc: any
+    mediaSrc: any[]
 }
  
 const GallarySetup: FC<GallarySetupProps> = ({ mediaSrc, formData, handleChange }) => {
@@ -34,11 +34,12 @@ const GallarySetup: FC<GallarySetupProps> = ({ mediaSrc, formData, handleChange 
                         </div>
                     </div>
 
-                    {mediaSrc &&
-                        <div className="img-preview">
-                            <Image className="rounded-[4px]" src={mediaSrc} alt="" width={105} height={72} />
+                    <div className="flex items-center gap-2">{mediaSrc && mediaSrc.map(photo => (
+                        <div key={photo} className="img-preview ">
+                            <Image className="rounded-[4px]" src={URL.createObjectURL(photo)} alt="" width={105} height={72} />
                         </div>
-                    }
+                    ))
+                    }</div>
 
                     <div className="form-control">
                         <div className="custom-upload-btn">

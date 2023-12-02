@@ -30,15 +30,12 @@ const NewService: FC<NewServiceProps> = () => {
     const steps = ["General Info", "Availability", "Gallary"]
     const [activeStep, setActiveStep] = useState(0)
     const [isLoading, setIsLoading] = useState(false)
+    const [showPublishModal, setShowPublishModal] = useState(false)
 
     const serviceApis = new Service(router)
 
     const [categories, setCategories] = useState<IServiceCategory[]>()
     const [subCategories, setSubCategories] = useState<IServiceSubCategory[]>()
-
-    let pictures: any[] = []
-    let licenseAndCertification: any[] = []
-    let insuranceCoverage: any[] = []
 
     const [serviceFormData, setServiceFormData] = useState<any>({
         name: '',
@@ -56,9 +53,9 @@ const NewService: FC<NewServiceProps> = () => {
                 to: '',
             }
         },
-        media: {},
-        insuranceCoverage: {},
-        licenseAndCertification: {}
+        // media: {},
+        // insuranceCoverage: {},
+        // licenseAndCertification: {}
     })
 
     const { isOpen, openModal, closeModal } = useModal();
@@ -68,6 +65,10 @@ const NewService: FC<NewServiceProps> = () => {
         setServiceFormData(updateFormData)
     }
     const [mediaSrc, setMediaSrc] = useState<any>()
+    const [photos, setPhotos] = useState<any[]>([])
+    const [insuranceCoverage, setInsuranceCoverage] = useState<any>()
+    const [licenseAndCertification, setLicenseAndCertification] = useState<any>()
+
 
     const handleChange = (e: any) => {
         const { name, value } = e.target;
@@ -87,28 +88,27 @@ const NewService: FC<NewServiceProps> = () => {
         if (name == 'media') {
             const file = e.target.files[0]
             if (file) {
-                const reader = new FileReader();
+                // const reader = new FileReader();
 
-                reader.onload = function (e) {
-                    setMediaSrc(e.target?.result);
-                };
+                // reader.onload = function (e) {
+                //     setMediaSrc(e.target?.result);
+                // };
 
-                reader.readAsDataURL(file);
-                pictures.push(file)
-                console.log(pictures)
+                // reader.readAsDataURL(file);
+                setPhotos([file, ...photos])
             }
             // setServiceFormData({...serviceFormData, media: [...serviceFormData.media, file]});
         }
         if (name == 'insuranceCoverage') {
             const file = e.target.files[0]
             if (file) {
-                insuranceCoverage.push(file)
+                setInsuranceCoverage(file)
             }
         }
         if (name == 'licenseAndCertification') {
             const file = e.target.files[0]
             if (file) {
-                licenseAndCertification.push(file)
+                setLicenseAndCertification(file)
             }
         }
         setServiceFormData({ ...serviceFormData, [name]: value });
@@ -177,6 +177,8 @@ const NewService: FC<NewServiceProps> = () => {
                 return
             }
 
+            console.log(serviceFormData)
+
             setActiveStep(activeStep + 1)
         }
     }
@@ -193,11 +195,11 @@ const NewService: FC<NewServiceProps> = () => {
         formData.append('price', serviceFormData.price)
         formData.append('desc', serviceFormData.desc)
         formData.append('availability', JSON.stringify(serviceFormData.availability))
-        pictures.forEach(image => formData.append('photos', image))
-        licenseAndCertification.forEach(cert => formData.append('licenseAndCertification', cert))
-        insuranceCoverage.forEach(insurance => formData.append('insuranceCoverage', insurance))
-        serviceApis.creatService(formData, { setIsLoading })
-        openModal()
+        photos.forEach(photo => formData.append('photos', photo))
+        formData.append('licenseAndCertification', licenseAndCertification)
+        formData.append('insuranceCoverage', insuranceCoverage)
+        serviceApis.creatService(formData, { setIsLoading }, setShowPublishModal)
+        if(showPublishModal) openModal()
     }
 
     const confirmPublishing = () => {
@@ -207,6 +209,7 @@ const NewService: FC<NewServiceProps> = () => {
     }
 
     const cancelPublishing = () => {
+        router.push('/dashboard/service')
         closeModal()
     }
 
@@ -246,7 +249,7 @@ const NewService: FC<NewServiceProps> = () => {
                                 handleCategoryChange={handleCategory} handleCountryChange={handleCountry} handleStateChange={handleState}
                                 handleSubCatChange={handleSubCat} cats={categories} subCats={subCategories} />}
                             {activeStep === 1 && <ServiceSetupForm formData={serviceFormData} handleChange={handleChange} addDays={addDays} />}
-                            {activeStep === 2 && <GallarySetup mediaSrc={mediaSrc} formData={serviceFormData} handleChange={handleChange} />}
+                            {activeStep === 2 && <GallarySetup mediaSrc={photos} formData={serviceFormData} handleChange={handleChange} />}
                         </div>
                         <div className="btns flex items-center justify-end gap-4 mt-[45px]">
                             {activeStep !== 0 &&

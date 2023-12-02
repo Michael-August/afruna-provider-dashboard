@@ -75,16 +75,18 @@ export default class Service {
         }
     }
 
-    async creatService(payload: any, loading_opt: T_loading_provider) {
+    async creatService(payload: any, loading_opt: T_loading_provider, setShowPublishModal: (arg: boolean) => void) {
         const { setIsLoading } = loading_opt
         setIsLoading && setIsLoading(true)
         try {
             const { data } = await axios.post<TSuccessResponse<IService>>('/api/services', payload, headers)
             store.dispatch(createService(data.data))
             localStorage.setItem("recentService", JSON.stringify(data.data))
+            setShowPublishModal(true)
             toast.success('Service listing successful', { autoClose: 1000 })
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>);
+            setShowPublishModal(false)
         } finally {
             setIsLoading && setIsLoading(false)
         }
