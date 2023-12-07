@@ -195,7 +195,7 @@ const Dashboard: FC<DashboardProps> = () => {
                                                         <div className="flex items-center justify-between">
                                                             <span className="text-sm mr-10 font-bold text-custom-blue">Customer</span>
                                                             <div className="extra flex items-center">
-                                                                :<Image className="smallProfile" width={40} src={`https://${booking.customerId.avatar}`} height={40} alt="" />
+                                                                :<Image className="smallProfile" width={40} src={`${booking.customerId.avatar}`} height={40} alt="" />
                                                                 <span className="text-[#787878] ml-[10px] text-xs">{ booking.customerId.firstName } { booking.customerId.lastName }</span>
                                                                 <span className="text-[#787878] text-xs ml-5">{ booking.customerId.email }</span>
                                                             </div>
@@ -286,7 +286,7 @@ const Dashboard: FC<DashboardProps> = () => {
                                             <div className="flex items-center justify-between">
                                                 <span className="text-base mr-10 font-bold text-custom-blue">Customer</span>
                                                 <div className="extra flex items-center">
-                                                    :<Image className="smallProfile" width={40} src={`https://${booking.customerId.avatar}`} height={40} alt="" />
+                                                    :<Image className="smallProfile" width={40} src={`${booking.customerId.avatar}`} height={40} alt="" />
                                                     <span className="text-[#787878] ml-[10px] text-xs">{booking.customerId.firstName} { booking.customerId.lastName }</span>
                                                     <span className="text-[#787878] text-xs ml-5">{ booking.customerId.email }</span>
                                                 </div>

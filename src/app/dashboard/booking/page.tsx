@@ -111,7 +111,7 @@ const Bookings: FC<BookingsProps> = () => {
                                 <Card className="w-full rounded-[8px] bg-[#FAFCFF] lg:py-[21px] lg:px-[22px]">
                                     <CardContent className="flex flex-col lg:flex lg:flex-row items-center justify-between">
                                         <div className="img-detail lg:flex lg:flex-row lg:items-center lg:justify-center">
-                                            <Image className="lg:mr-[21px] mb-[25px] lg:mb-0 w-full lg:w-[231px]" src={booking.serviceId.photos && booking.serviceId.photos.length !== 0 ? `${booking.serviceId.photos[0]}` : booking4} alt="" />
+                                            <Image className="lg:mr-[21px] mb-[25px] lg:mb-0 w-full lg:w-[231px]" src={booking.serviceId?.photos && booking.serviceId.photos?.length !== 0 ? `${booking.serviceId.photos[0]}` : booking4} alt="" />
                                             <div className="details flex flex-col mx-[25px] mb-[30px] lg:mx-0 lg:mb-0 justify-between gap-5">
                                                 <div className="top flex items-center justify-between">
                                                     <span className="text-lg mr-10 font-bold text-custom-blue">{booking.serviceId?.name}</span>
@@ -138,7 +138,7 @@ const Bookings: FC<BookingsProps> = () => {
                                                 <div className="flex items-center justify-between">
                                                     <span className="text-sm mr-10 font-bold text-custom-blue">Customer</span>
                                                     <div className="extra flex items-center">
-                                                        :<Image className="smallProfile" width={40} src={`https://${booking.customerId.avatar}`} height={40} alt="" />
+                                                        :<Image className="smallProfile" width={40} src={`${booking.customerId.avatar}`} height={40} alt="" />
                                                         <span className="text-[#787878] ml-[10px] text-xs">{ booking.customerId.firstName } { booking.customerId.lastName }</span>
                                                         <span className="text-[#787878] text-xs ml-5">{ booking.customerId.email }</span>
                                                     </div>

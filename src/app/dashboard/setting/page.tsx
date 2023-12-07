@@ -195,7 +195,7 @@ const Settings: FC<SettingsProps> = () => {
                                 </div>
                                 
                                 <div className="flex item-center justify-end mt-5 lg:mt-[50px]">
-                                    <Button className="bg-[#0177B7] px-4 py-2 rounded-[4px] text-white text-sm">Update information</Button>
+                                    {/* <Button className="bg-[#0177B7] px-4 py-2 rounded-[4px] text-white text-sm">Update information</Button> */}
                                 </div>
                             </form>
                         </CardContent>
@@ -249,7 +249,7 @@ const Settings: FC<SettingsProps> = () => {
                                 </div>
                                 
                                 <div className="flex item-center justify-end mt-5 lg:mt-[50px]">
-                                    <Button className="bg-[#0177B7] px-4 py-2 rounded-[4px] text-white text-sm">Update information</Button>
+                                    {/* <Button className="bg-[#0177B7] px-4 py-2 rounded-[4px] text-white text-sm">Update information</Button> */}
                                 </div>
                             </form>
                         </CardContent>
