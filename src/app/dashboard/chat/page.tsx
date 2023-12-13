@@ -115,7 +115,6 @@ const Chat: FC<ChatProps> = () => {
     );
     socket.emit("register", loggedInUser._id);
     socket.on("message", (newMessage) => {
-      console.log(newMessage);
       store.dispatch(setMessages(newMessage));
     });
 

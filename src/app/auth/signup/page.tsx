@@ -102,7 +102,6 @@ const Register: FC<Props> = () => {
     const handleFormSubmission = (values: ISignUp) => {
         const authService = new AuthService(router)
         authService.signup(values, { setIsLoading })
-        console.log("Sign up attempted")
     }
     return ( 
         <>

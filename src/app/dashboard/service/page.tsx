@@ -43,7 +43,6 @@ const Services: FC<ServicesProps> = () => {
     if(page === null) page = '1'
 
     const sendDataForEditting = (serviceId: string) => {
-        console.log('Edit dispatched')
         store.dispatch(setServiceId(serviceId))
         router.push('/dashboard/service/new-service')
     }

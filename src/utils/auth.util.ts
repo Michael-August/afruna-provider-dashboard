@@ -54,7 +54,6 @@ export function handleAuthErrors(error: AxiosError<TErrorResponse>) {
 			progress: undefined,
 			theme: "colored",
 		}); */
-		console.error(JSON.stringify(error));
 		return error;
 	}
 }

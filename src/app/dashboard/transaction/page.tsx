@@ -49,7 +49,6 @@ const Transactions: FC<TransactionsProps> = () => {
 
     const searchParams = useSearchParams()
     let page = searchParams.get('page') as string
-    console.log(page)
 
     if(page === null) page = '1'
 

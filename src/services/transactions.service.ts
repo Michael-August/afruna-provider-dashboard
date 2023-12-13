@@ -62,7 +62,6 @@ export default class Transaction {
             const {data} = await axios.post<TSuccessResponse<IConfirmBankDetailsResponse>>('/api/wallets/bank/confirm', payload, headers)
             return data
         } catch (error: any) {
-            console.log(error)
             if (error.response.data.error.error === "Could not resolve account name. Check parameters or try again.") {
                 toast.error("Could not resolve account name. Check parameters or try again.", {autoClose: 1000})
             }

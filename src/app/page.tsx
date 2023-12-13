@@ -99,8 +99,8 @@ export default function Home() {
 								<Image src={mainprofilepic} alt="" />
 							</div>
 							<div className="provider-info flex flex-col mb-5">
-								<span className="flex items-center gap-2 text-custom-blue text-base mb-[5px]">Yamaha Jamal <Image src={verified} alt="" /></span>
-								<span className="text-[#707070] mb-[10px]">Electrician</span>
+								<span className="flex items-center gap-2 text-custom-blue text-base mb-[5px]">Michael August <Image src={verified} alt="" /></span>
+								<span className="text-[#707070] mb-[10px]">Plumber</span>
 								<div className="rating flex items-center gap-1">
 									<div className="stars flex items-center gap-[2px]">
 										<Image src={star} alt="" />
@@ -122,8 +122,8 @@ export default function Home() {
 								<Image src={mainprofilepic} alt="" />
 							</div>
 							<div className="provider-info flex flex-col mb-5">
-								<span className="flex items-center gap-2 text-custom-blue text-base mb-[5px]">Yamaha Jamal <Image src={verified} alt="" /></span>
-								<span className="text-[#707070] mb-[10px]">Electrician</span>
+								<span className="flex items-center gap-2 text-custom-blue text-base mb-[5px]">Shehul Lawal <Image src={verified} alt="" /></span>
+								<span className="text-[#707070] mb-[10px]">Video Editing</span>
 								<div className="rating flex items-center gap-1">
 									<div className="stars flex items-center gap-[2px]">
 										<Image src={star} alt="" />
@@ -145,8 +145,8 @@ export default function Home() {
 								<Image src={mainprofilepic} alt="" />
 							</div>
 							<div className="provider-info flex flex-col mb-5">
-								<span className="flex items-center gap-2 text-custom-blue text-base mb-[5px]">Yamaha Jamal <Image src={verified} alt="" /></span>
-								<span className="text-[#707070] mb-[10px]">Electrician</span>
+								<span className="flex items-center gap-2 text-custom-blue text-base mb-[5px]">Idris Redemption <Image src={verified} alt="" /></span>
+								<span className="text-[#707070] mb-[10px]">Architect</span>
 								<div className="rating flex items-center gap-1">
 									<div className="stars flex items-center gap-[2px]">
 										<Image src={star} alt="" />

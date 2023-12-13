@@ -31,7 +31,6 @@ class AuthService {
             this.router?.push("/dashboard");
 
         } catch (error: any) {
-            console.log(error)
             if (error.response.status === 500) {
                 toast.error(`${error.response.statusText}, try again later`)
             }

@@ -177,7 +177,6 @@ const NewService: FC<NewServiceProps> = () => {
                 return
             }
 
-            console.log(serviceFormData)
 
             setActiveStep(activeStep + 1)
         }
@@ -217,7 +216,6 @@ const NewService: FC<NewServiceProps> = () => {
         const categoriesData = serviceApis.getServiceCategories()
         categoriesData.then(data => setCategories(data?.data))
         if (serviceId) {
-            console.log(serviceToUpdate)
             serviceApis.getService(serviceId, { setIsLoading })
             setServiceFormData({...serviceToUpdate})
         }  
