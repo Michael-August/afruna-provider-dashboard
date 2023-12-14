@@ -5,10 +5,10 @@ export interface IService {
     country: string
     customId?: string
     desc: string
-    insuranceCoverage?: []
-    licenseAndCertification?: []
+    insuranceCoverage?: String[]
+    licenseAndCertification?: String[]
     name: string
-    photos: []
+    photos: String[]
     price: number
     publish: boolean
     providerId: string

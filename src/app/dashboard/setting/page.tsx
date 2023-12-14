@@ -214,7 +214,7 @@ const Settings: FC<SettingsProps> = () => {
                                 <div className="double-input lg:flex lg:gap-[35px]">
                                     <div className="form-control mb-[22px] lg:mb-0 w-full">
                                         <div className="form-control w-full flex flex-col gap-2">
-                                            <Label className="text-sm font-semibold">Account holder's name <span className="text-[red]">*</span></Label>
+                                            <Label className="text-sm font-semibold">Account holder name <span className="text-[red]">*</span></Label>
                                             <input type="text" name="accountName" value={accountInfo.accountName} onChange={handleAccountInfoChange} id="" placeholder=""
                                                 className="border-[1px] w-full shadow-md text-sm border-[#FFDBB6] rounded-[6px] p-[10px] focus:outline-none" />
                                         </div>
@@ -236,7 +236,7 @@ const Settings: FC<SettingsProps> = () => {
                                             </SelectTrigger>
                                             <SelectContent className="focus:outline-none text-sm border-[#FFDBB6] rounded-[6px]">
                                                 <SelectGroup>
-                                                    {banks.map(bank => <SelectItem value={bank.code}>{bank.name}</SelectItem>)}
+                                                    {banks.map(bank => <SelectItem key={bank._id} value={bank.code}>{bank.name}</SelectItem>)}
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>

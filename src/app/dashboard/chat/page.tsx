@@ -161,6 +161,7 @@ const Chat: FC<ChatProps> = () => {
                       const secondWord = nameSplit[1]?.charAt(0).toUpperCase();
                     return (
                       <div
+                        key={convo._id}
                         onClick={() => fetchMessages(convo)}
                         className="friend rounded-[8px] bg-gray-50 cursor-pointer px-[14px] py-4 flex items-center justify-between"
                       >
@@ -249,7 +250,7 @@ const Chat: FC<ChatProps> = () => {
                     <hr className="mb-5 -mx-6" />
                     <div className="chats">
                       {!isNewChat ? messages.map((message) => (
-                        <div className="sent-received-messages">
+                        <div key={message._id} className="sent-received-messages">
                           <div
                             className={clsx(
                               message.from == user._id ||
@@ -291,7 +292,7 @@ const Chat: FC<ChatProps> = () => {
                         <div className="">
                           {
                             newUserMessage.length !== 0 ? newUserMessage.map(message => (
-                              <div>
+                              <div key={message._id}>
                                 <div className="sent">
                                   <div className="messages">
                                     <span
@@ -357,6 +358,7 @@ const Chat: FC<ChatProps> = () => {
           <div className="users flex flex-col gap-2">
             {users.map((user) => (
               <div
+                key={user._id}
                 onClick={() => startNewChat(user)}
                 className="friend cursor-pointer px-[14px] py-4 flex items-center justify-between rounded-[8px] bg-gray-50"
               >

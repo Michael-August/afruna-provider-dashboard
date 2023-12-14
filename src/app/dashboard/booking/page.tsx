@@ -24,6 +24,7 @@ import { Loader2 } from "lucide-react";
 import Pagination from "@/src/components/Pagination";
 import { useRouter, useSearchParams } from "next/navigation";
 import '@/src/assets/css/styles.css'
+import Link from "next/link";
 
 interface BookingsProps {
     
@@ -176,7 +177,9 @@ const Bookings: FC<BookingsProps> = () => {
                                                         <Image src={star} alt="" />
                                                         <Image src={star} alt="" />
                                                     </div>
-                                                    <span className="hidden lg:block text-sm text-[#019DDC] font-semibold cursor-pointer">View Details</span>
+                                                    <Link className="hidden lg:block text-sm text-[#019DDC] font-semibold cursor-pointer" href={`/dashboard/booking/${booking._id}`}>
+                                                        View Details
+                                                    </Link>
                                                 </div>
                                             }
                                         </div>
