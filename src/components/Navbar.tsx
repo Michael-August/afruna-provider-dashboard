@@ -22,10 +22,11 @@ import Image from "next/image";
 import '../assets/css/styles.css'
 import clsx from "clsx";
 import { linkitems } from "../constants/linkitems";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import AuthService from "../services/auth.service";
 
 interface NavBarProps {
     source: string
@@ -36,6 +37,8 @@ let styles = {
 }
  
 const NavBar: FC<NavBarProps> = ({ source }) => {
+    const router = useRouter()
+    
     const [isSideBarOpen, setSideBar] = useState(false)
     const [user, setUser] = useState(useSelector((state: RootState) => state.auth.userBio))
     const activePath = usePathname()
@@ -47,6 +50,11 @@ const NavBar: FC<NavBarProps> = ({ source }) => {
             }
         }
     }, [])
+
+    const logOut = () => {
+        const authService = new AuthService(router)
+        authService.logout()
+    }
 
     return ( 
         <>
@@ -141,6 +149,11 @@ const NavBar: FC<NavBarProps> = ({ source }) => {
                                         </Link> 
                                     )
                                 }
+
+                                <div onClick={logOut} className="link-item px-5 py-3 flex items-center gap-4">
+                                    <Image src={logouticon} alt="" />
+                                    <span className="text-sm font-semibold text-[#A7B7DD]">Log out</span>
+                                </div>
                             </div>
                             <div className="sidenav-footer flex flex-col gap-8 mt-[50px]">
                                 <div className="first flex flex-col gap-3">
