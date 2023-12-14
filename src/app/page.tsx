@@ -112,7 +112,7 @@ export default function Home() {
 								</div>
 							</div>
 							<div className="flex items-center justify-center">
-								<Button className="btn-sp">Book Service</Button>
+								{/* <Button className="btn-sp">Book Service</Button> */}
 							</div>
 						</CardContent>
 					</Card>
@@ -135,7 +135,7 @@ export default function Home() {
 								</div>
 							</div>
 							<div className="flex items-center justify-center">
-								<Button className="btn-sp">Book Service</Button>
+								{/* <Button className="btn-sp">Book Service</Button> */}
 							</div>
 						</CardContent>
 					</Card>
@@ -158,7 +158,7 @@ export default function Home() {
 								</div>
 							</div>
 							<div className="flex items-center justify-center">
-								<Button className="btn-sp">Book Service</Button>
+								{/* <Button className="btn-sp">Book Service</Button> */}
 							</div>
 						</CardContent>
 					</Card>

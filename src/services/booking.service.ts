@@ -47,10 +47,11 @@ export default class BookingService {
 
     async updateBooking(bookingId: any, updatedBooking: any, loading_opt: T_loading_provider) {
         const { setIsLoading } = loading_opt
-        // setIsLoading && setIsLoading(true)
+        setIsLoading && setIsLoading(true)
         try {
             const { data } = await axios.put(`/api/bookings/${bookingId}`, updatedBooking, headers)
-            store.dispatch(updateBooking(data.data))
+            // store.dispatch(updateBooking(data.data))
+            this.getBookings({setIsLoading}, 1)
             toast.success('status updated successful', {autoClose: 1000})
         } catch (error) {
             handleAuthErrors(error as AxiosError<TErrorResponse>)
