@@ -46,7 +46,7 @@ const Dashboard: FC<DashboardProps> = () => {
 
     const [btnIsLoading, setBtnIsLoading] = useState(false)
 
-    const [localUser, setLocalUser] = useState<IUserBio>(JSON.parse(sessionStorage.getItem("user") || ""));
+    // const [localUser, setLocalUser] = useState<IUserBio>(JSON.parse(sessionStorage.getItem("user") || ""));
 
     const formatDate = (date: string) => {
         const createdAtDate = new Date(date);
@@ -70,7 +70,7 @@ const Dashboard: FC<DashboardProps> = () => {
         // if (!user) {
         //     setLocalUser(JSON.parse(sessionStorage.getItem("user") || "") );
         // }
-        dashboardApis.getDashboardCards({setIsLoading}, localUser._id)
+        dashboardApis.getDashboardCards({setIsLoading}, JSON.parse(sessionStorage.getItem("user") || "")._id)
         dashboardApis.getBookings()
     }, [])
 

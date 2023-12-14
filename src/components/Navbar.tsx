@@ -115,7 +115,7 @@ const NavBar: FC<NavBarProps> = ({ source }) => {
                                     <Image src={arrowDown} alt="help" />
                                 </div>
                                 <div className="profile block mr-5 lg:hidden items-center gap-2">
-                                    <Image width={34} height={34} src={user.avatar} alt="help" />
+                                    <Image width={34} height={34} src={user.avatar} className="profileImg" alt="help" />
                                 </div>
                             </div>
                         }
