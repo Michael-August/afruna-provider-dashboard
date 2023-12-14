@@ -145,7 +145,7 @@ const Transactions: FC<TransactionsProps> = () => {
         transationApis.getBanks()
     }, [page])
     return ( 
-        <div className="dashboard max-w-screen lg:px-[32px] px-5 pb-[132px]">
+        <div className="dashboard w-screen lg:px-[32px] px-5 pb-[132px]">
             <header className="py-6 lg:mx-[-32px] lg:px-[32px] lg:bg-white lg:mb-8 mb-[30px]">
                 <div className="item flex flex-wrap items-center justify-between">
                     <span className="text-2xl font-semibold">Transactions</span>
@@ -199,14 +199,14 @@ const Transactions: FC<TransactionsProps> = () => {
 
                 <span className="note lg:w-[458] text-[#494A6E] mb-[25px] text-sm">If your available Balance exceeds S$1000, it’ll be transferred to your bank account automatically</span>
 
-                <div className="table">
+                <div className="">
                     <Card className="px-[23px] pt-[26px] pb-[44px]">
-                        <CardContent className="flex flex-col">
+                        <CardContent className="flex flex-col overflow-auto">
                             <span className="heading text-[20px] font-extrabold">Transaction history</span>
                             <hr className="mx-[-23px] mb-[22px] mt-[26px]" />
 
-                            <Table className="w-full">
-                                <TableHeader>
+                            <Table className="">
+                                <TableHeader className="">
                                     <TableRow>
                                         <TableHead className="text-[#7C7C7C] text-sm">Transaction ID</TableHead>
                                         <TableHead className="text-[#7C7C7C] text-sm">Event</TableHead>
@@ -217,11 +217,8 @@ const Transactions: FC<TransactionsProps> = () => {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {transactions.length === 0 ?
-                                        <TableRow className="">
-                                            <TableCell className="text-[#7C7C7C] text-sm">No transactions yet</TableCell>
-                                        </TableRow>
-                                        : transactions.map((transaction: ITransaction) => (
+                                    {transactions.length === 0 &&
+                                        transactions.map((transaction: ITransaction) => (
                                             <TableRow key={transaction.customId}>
                                                 <TableCell className="text-sm">{ transaction.customId }</TableCell>
                                                 {transaction.event === 'Withdrawal' ?
@@ -246,6 +243,7 @@ const Transactions: FC<TransactionsProps> = () => {
                                     }
                                 </TableBody>
                             </Table>
+                            {transactions.length === 0 && <span className="text-[#7C7C7C] text-center mt-5 mb-5">No transactions yet</span>}
                         </CardContent>
                     </Card>
                 </div>
